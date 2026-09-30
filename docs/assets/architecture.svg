@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 210" width="720" height="210" role="img" aria-label="Three-tier architecture: Vue client, Express API, MySQL database">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a5a2b" />
+    </marker>
+  </defs>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1f2328">
+    <rect x="4" y="30" width="196" height="120" rx="10" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="102" y="56" text-anchor="middle" font-weight="600">Client - Vue 3</text>
+    <text x="102" y="80" text-anchor="middle" font-size="12" fill="#7a6a58">Vite · Vue Router · Pinia</text>
+    <text x="102" y="100" text-anchor="middle" font-size="12" fill="#7a6a58">Tailwind v4 · axios</text>
+    <text x="102" y="126" text-anchor="middle" font-size="12" fill="#7a6a58">localhost:5173</text>
+    <rect x="262" y="30" width="196" height="120" rx="10" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="360" y="56" text-anchor="middle" font-weight="600">Server - Node.js</text>
+    <text x="360" y="80" text-anchor="middle" font-size="12" fill="#7a6a58">Express · routes</text>
+    <text x="360" y="100" text-anchor="middle" font-size="12" fill="#7a6a58">controllers · Sequelize</text>
+    <text x="360" y="126" text-anchor="middle" font-size="12" fill="#7a6a58">localhost:8080</text>
+    <rect x="520" y="30" width="196" height="120" rx="10" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="618" y="56" text-anchor="middle" font-weight="600">Database - MySQL</text>
+    <text x="618" y="80" text-anchor="middle" font-size="12" fill="#7a6a58">7 tables</text>
+    <text x="618" y="100" text-anchor="middle" font-size="12" fill="#7a6a58">users · tasks · tags</text>
+    <text x="618" y="126" text-anchor="middle" font-size="12" fill="#7a6a58">poutines · ledger</text>
+    <path d="M 204 72 H 256" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 256 110 H 204" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 462 72 H 514" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 514 110 H 462" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <text x="230" y="180" text-anchor="middle" font-size="11" fill="#7a6a58">JSON over HTTP · httpOnly cookie</text>
+    <text x="588" y="180" text-anchor="middle" font-size="11" fill="#7a6a58">Sequelize · parameterised queries</text>
+  </g>
+</svg>

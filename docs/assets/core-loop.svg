@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 140" width="720" height="140" role="img" aria-label="Core loop: complete a task, earn fries, open a box, collect a poutine">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a5a2b" />
+    </marker>
+  </defs>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1f2328">
+    <rect x="4" y="16" width="150" height="46" rx="8" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="79" y="44" text-anchor="middle">Complete a task</text>
+    <rect x="192" y="16" width="150" height="46" rx="8" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="267" y="44" text-anchor="middle">Earn 10 fries</text>
+    <rect x="380" y="16" width="150" height="46" rx="8" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="455" y="44" text-anchor="middle">Open a box</text>
+    <rect x="568" y="16" width="148" height="46" rx="8" fill="#f7f1e6" stroke="#e5d9c3" />
+    <text x="642" y="44" text-anchor="middle">Collect a poutine</text>
+    <path d="M 158 39 H 186" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 346 39 H 374" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 534 39 H 562" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <path d="M 642 66 V 96 H 79 V 68" stroke="#8a5a2b" fill="none" marker-end="url(#arrow)" />
+    <text x="360" y="120" text-anchor="middle" fill="#7a6a58" font-size="12">your companion reacts, and the next task is worth starting</text>
+  </g>
+</svg>

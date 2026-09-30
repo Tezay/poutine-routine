@@ -1,0 +1,124 @@
+// Poutine Routine - database schema
+
+Project poutine_routine {
+  database_type: 'MySQL'
+  Note: 'Secure to-do application with a poutine collection. One board per user.'
+}
+
+Enum task_status {
+  todo
+  doing
+  done
+}
+
+Enum task_priority {
+  low
+  medium
+  high
+}
+
+Enum rarity {
+  common
+  rare
+  epic
+  legendary
+}
+
+Enum fries_reason {
+  task_completed
+  on_time_bonus
+  daily_goal
+  box_opened
+  duplicate_refund
+}
+
+Table users {
+  id int [pk, increment]
+  username varchar(30) [not null, unique]
+  email varchar(120) [not null, unique]
+  password_hash varchar(60) [not null, note: 'bcrypt hash, never the password']
+  fries_balance int [not null, default: 0, note: 'cached sum of fries_transactions']
+  daily_goal tinyint [not null, default: 3]
+  current_streak int [not null, default: 0]
+  best_streak int [not null, default: 0]
+  last_completed_on date [null, note: 'used to continue or break the streak']
+  companion_poutine_id int [null, ref: > poutines.id, note: 'the poutine shown beside the board']
+  created_at datetime [not null]
+  updated_at datetime [not null]
+}
+
+Table tasks {
+  id int [pk, increment]
+  user_id int [not null, ref: > users.id]
+  title varchar(120) [not null]
+  description text [null]
+  status task_status [not null, default: 'todo']
+  priority task_priority [null]
+  position int [not null, default: 0, note: 'order inside its column']
+  due_at datetime [null]
+  completed_at datetime [null]
+  rewarded_at datetime [null, note: 'set once; blocks re-earning fries on the same task']
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (user_id, status, position)
+    (user_id, due_at)
+  }
+}
+
+Table tags {
+  id int [pk, increment]
+  user_id int [not null, ref: > users.id]
+  name varchar(30) [not null]
+  color char(7) [not null, default: '#0969da']
+  created_at datetime [not null]
+
+  indexes {
+    (user_id, name) [unique]
+  }
+}
+
+Table task_tags {
+  task_id int [ref: > tasks.id]
+  tag_id int [ref: > tags.id]
+
+  indexes {
+    (task_id, tag_id) [pk]
+  }
+}
+
+Table poutines {
+  id int [pk, increment]
+  slug varchar(40) [not null, unique]
+  name varchar(60) [not null]
+  lore varchar(160) [null, note: 'one line of flavour text']
+  rarity rarity [not null, default: 'common']
+  sprite varchar(80) [not null, note: 'asset folder; optional layers resolved client-side']
+  effect varchar(40) [null, note: 'key of the optional front-end behaviour']
+}
+
+Table user_poutines {
+  user_id int [ref: > users.id]
+  poutine_id int [ref: > poutines.id]
+  quantity int [not null, default: 1]
+  first_obtained_at datetime [not null]
+
+  indexes {
+    (user_id, poutine_id) [pk]
+  }
+}
+
+Table fries_transactions {
+  id int [pk, increment]
+  user_id int [not null, ref: > users.id]
+  amount int [not null, note: 'positive when earned, negative when spent']
+  reason fries_reason [not null]
+  task_id int [null, ref: > tasks.id]
+  poutine_id int [null, ref: > poutines.id]
+  created_at datetime [not null]
+
+  indexes {
+    (user_id, created_at)
+  }
+}
