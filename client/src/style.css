@@ -1,0 +1,8 @@
+@import './styles/theme.css';
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg-default);
+  color: var(--color-fg-default);
+}
