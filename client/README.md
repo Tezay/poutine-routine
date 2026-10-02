@@ -80,7 +80,7 @@ client/
     ├── router/
     │   └── index.js        route table
     ├── views/              one component per route
-    ├── components/         components shared by more than one view
+    ├── components/         modals and other pieces split out of a view
     ├── stores/             Pinia stores, added when a feature needs one
     ├── services/
     │   └── http-common.js  shared axios instance
