@@ -3,9 +3,6 @@ name: Client CI
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'client/**'
-      - '.github/workflows/client-ci.yml'
 
 defaults:
   run:
