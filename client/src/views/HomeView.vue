@@ -1,12 +1,18 @@
 <template>
-  <main class="flex min-h-screen items-center justify-center bg-bg-default text-fg-default">
+  <AppTopbar title="Home View" action-label="Romanifier" />
+  <div class="flex justify-center p-6">
     <div class="text-center">
-      <h1 class="font-pixel text-2xl">Poutine Routine</h1>
+      <h2 class="font-pixel text-2xl">Poutine Routine</h2>
       <p class="mt-2 text-fg-muted">Client scaffold, work in progress.</p>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
-export default {};
+import AppTopbar from '../components/AppTopbar.vue';
+export default {
+  components: {
+    AppTopbar,
+  },
+};
 </script>
