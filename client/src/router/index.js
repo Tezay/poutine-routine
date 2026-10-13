@@ -4,7 +4,7 @@ import TableView from '../views/TableView.vue';
 
 const routes = [
   { path: '/', name: 'board', component: BoardView },
-  { path: '/table', name: 'table', component: TableView }
+  { path: '/table', name: 'table', component: TableView },
 ];
 
 const router = createRouter({
