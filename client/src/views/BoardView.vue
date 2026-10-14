@@ -2,7 +2,7 @@
   <AppTopbar title="My board" action-label="New task" />
 
   <div
-    v-if="tasks.length === 0"
+    v-if="tasksStore.tasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
     <div
@@ -28,7 +28,7 @@
       :key="column.status"
       :title="column.label"
       :dot-class="column.dotClass"
-      :tasks="tasksByStatus(column.status)"
+      :tasks="tasksStore.tasksByStatus(column.status)"
     />
   </div>
 </template>
@@ -36,29 +36,27 @@
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
 import TaskColumn from '../components/TaskColumn.vue';
-import tasks from '../mock/tasks.js';
+import { useTasksStore } from '../stores/tasks.js';
 
 export default {
   components: {
     AppTopbar,
     TaskColumn,
   },
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
   data() {
     return {
-      tasks,
       columns: [
         { status: 'todo', label: 'To Do', dotClass: 'text-fg-success' },
         { status: 'doing', label: 'Doing', dotClass: 'text-fg-attention' },
         { status: 'done', label: 'Done', dotClass: 'text-fg-done' },
       ],
     };
-  },
-  methods: {
-    tasksByStatus(status) {
-      return this.tasks
-        .filter((task) => task.status === status)
-        .sort((a, b) => a.position - b.position);
-    },
   },
 };
 </script>
