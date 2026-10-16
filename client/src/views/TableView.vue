@@ -11,8 +11,11 @@
             v-for="column in columns"
             :key="column.key"
             class="px-6 py-3"
-            :aria-sort = "sortKey === column.key ? (sortAscending ? 'ascending' : 'descending') : 'none'"
-          ><button type="button" class="…" @click="sortBy(column.key)">{{ column.label }}</button>
+            :aria-sort="
+              sortKey === column.key ? (sortAscending ? 'ascending' : 'descending') : 'none'
+            "
+          >
+            <button type="button" class="…" @click="sortBy(column.key)">{{ column.label }}</button>
           </th>
         </tr>
       </thead>
