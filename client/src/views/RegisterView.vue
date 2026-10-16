@@ -1,54 +1,67 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-bg-muted">
-    <div class="bg-white p-10 rounded-xl shadow-sm w-full max-w-md text-center">
-      <div class="w-20 h-20 mx-auto mb-6 bg-bg-muted rounded-lg flex items-center justify-center text-fg-muted">
-        <img src="../assets/logo.svg" alt="Logo" class="w-12 h-12" />
+  <div class="flex min-h-screen items-center justify-center bg-bg-muted">
+    <div
+      class="w-full max-w-md rounded-xl border border-border-muted bg-bg-default p-10 text-center"
+    >
+      <div
+        aria-hidden="true"
+        class="mx-auto mb-6 flex size-28 items-center justify-center rounded-xl border-2 border-dashed border-border-default bg-bg-inset text-sm text-fg-muted"
+      >
+        mascot
       </div>
 
-      <h2 class="text-2xl font-bold text-fg-default mb-2">Create your account</h2>
-      <p class="text-sm text-fg-muted mb-6">Finish tasks, earn fries, collect poutines.</p>
+      <h1 class="mb-2 text-2xl font-bold text-fg-default">Create your account</h1>
+      <p class="mb-6 text-fg-muted">Finish tasks, earn fries, collect poutines.</p>
 
-      <form class="text-left" @submit.prevent="handleSubmit" >
+      <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-5">
-          <label for="username" class="block text-sm font-semibold mb-1 text-fg-default">Username</label>
+          <label for="username" class="mb-1 block font-semibold text-fg-default">Username</label>
           <input
             id="username"
             v-model="form.username"
             type="text"
             placeholder="Username"
             required
-            class="w-full px-3 py-2 border border-border-default rounded-md text-sm focus:outline-none focus:border-green-600 box-border"
+            class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2 text-fg-default"
           />
         </div>
         <div class="mb-5">
-          <label for="email" class="block text-sm font-semibold mb-1 text-fg-default">Email</label>
+          <label for="email" class="mb-1 block font-semibold text-fg-default">Email</label>
           <input
             id="email"
             v-model="form.email"
             type="email"
             placeholder="you@example.com"
             required
-            class="w-full px-3 py-2 border border-border-default rounded-md text-sm focus:outline-none focus:border-green-600 box-border"
+            class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2 text-fg-default"
           />
         </div>
         <div class="mb-5">
-          <label for="" class="block text-sm font-semibold mb-1 text-fg-default">Password</label>
+          <label for="password" class="mb-1 block font-semibold text-fg-default">Password</label>
           <input
             id="password"
             v-model="form.password"
             type="password"
-            placeholder="Password"
             minlength="8"
             required
-            class="w-full px-3 py-2 border border-border-default rounded-md text-sm focus:outline-none focus:border-green-600 box-border"
+            aria-describedby="password-hint"
+            class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2 text-fg-default"
           />
-          <small class="block mt-1 text-xs text-fg-muted">Password must be at least 8 characters long.</small>
+          <p id="password-hint" class="mt-1 text-sm text-fg-muted">At least 8 characters.</p>
         </div>
-        <p v-if="errorMessage" role="alert" class="text-sm text-fg-danger mb-4">{{ errorMessage }}</p>
-        <button type="submit" class="w-full py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md text-sm cursor-pointer mt-2">Create Account</button>
+        <button
+          type="submit"
+          class="w-full cursor-pointer rounded-md bg-bg-primary-emphasis px-4 py-3 font-semibold text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+        >
+          Create account
+        </button>
       </form>
-      <p class="mt-6 text-sm text-fg-muted">
-        Already have an account? <router-link to="/login" class="text-blue-600 font-medium hover:underline">Sign in</router-link>
+
+      <p class="mt-6 text-fg-muted">
+        Already have an account?
+        <router-link to="/login" class="font-medium text-fg-accent hover:underline">
+          Sign in
+        </router-link>
       </p>
     </div>
   </div>
@@ -56,7 +69,6 @@
 
 <script>
 export default {
-  name: 'RegisterView',
   data() {
     return {
       form: {
@@ -64,19 +76,11 @@ export default {
         email: '',
         password: '',
       },
-      errorMessage: '',
     };
   },
   methods: {
     handleSubmit() {
-      this.errorMessage = '';
-      
-      if (this.form.password.length < 8) {
-        this.errorMessage = 'Password must be at least 8 characters long.';
-        return;
-      }
-      const { password, ...safeForm } = this.form;
-      console.log('Form submitted:', safeForm);
+      console.log({ username: this.form.username, email: this.form.email });
     },
   },
 };
