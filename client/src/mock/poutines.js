@@ -70,7 +70,7 @@ export default [
     id: 7,
     slug: 'poutine-poutine',
     name: 'Poutine poutine',
-    lore: 'A stern, formal poutine who calls himself “the poutine of poutines” and insists there is only one correct recipe: his own. In another reality, he would have been a politician, giving speeches from a podium with that tricolor collar and a very firm handshake. In this one, he settles for lecturing anyone who will listen about curd-to-gravy ratios.',
+    lore: 'In another reality, he would have been a politician, giving speeches from a podium with that tricolor collar and a very firm handshake. In this one, he settles for lecturing anyone who will listen about curd-to-gravy ratios.',
     rarity: 'legendary',
     sprite: 'poutines/poutine-poutine',
     effect: null,
