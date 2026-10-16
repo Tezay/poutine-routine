@@ -10,12 +10,18 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-6 py-3"
+            class="px-4 py-3"
             :aria-sort="
               sortKey === column.key ? (sortAscending ? 'ascending' : 'descending') : 'none'
             "
           >
-            <button type="button" class="…" @click="sortBy(column.key)">{{ column.label }}</button>
+            <button
+              type="button"
+              class="cursor-pointer uppercase hover:text-fg-default"
+              @click="sortBy(column.key)"
+            >
+              {{ column.label }}
+            </button>
           </th>
         </tr>
       </thead>
@@ -74,11 +80,11 @@ export default {
       sortKey: 'due_at',
       sortAscending: true,
       columns: [
-        { key: 'title', label: 'TITLE' },
-        { key: 'status', label: 'STATUS' },
-        { key: 'tags', label: 'TAGS' },
-        { key: 'due_at', label: 'DUE' },
-        { key: 'priority', label: 'PRIORITY' },
+        { key: 'title', label: 'Title' },
+        { key: 'status', label: 'Status' },
+        { key: 'tags', label: 'Tags' },
+        { key: 'due_at', label: 'Due' },
+        { key: 'priority', label: 'Priority' },
       ],
     };
   },
