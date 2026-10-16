@@ -10,10 +10,9 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-6 py-3 cursor-pointer"
-            @click="sortBy(column.key)"
-          >
-            {{ column.label }}
+            class="px-6 py-3"
+            :aria-sort = "sortKey === column.key ? (sortAscending ? 'ascending' : 'descending') : 'none'"
+          ><button type="button" class="…" @click="sortBy(column.key)">{{ column.label }}</button>
           </th>
         </tr>
       </thead>
@@ -69,30 +68,30 @@ export default {
   data() {
     return {
       tasks,
-      sort_key: 'due_at',
+      sortKey: 'due_at',
       sortAscending: true,
       columns: [
-        { key: 'title', label: 'Title' },
-        { key: 'status', label: 'Status' },
-        { key: 'tags', label: 'Tags' },
-        { key: 'due_at', label: 'Due' },
-        { key: 'priority', label: 'Priority' },
+        { key: 'title', label: 'TITLE' },
+        { key: 'status', label: 'STATUS' },
+        { key: 'tags', label: 'TAGS' },
+        { key: 'due_at', label: 'DUE' },
+        { key: 'priority', label: 'PRIORITY' },
       ],
     };
   },
   computed: {
     sortedTasks() {
       return [...this.tasks].sort((a, b) => {
-        let valA = a[this.sort_key];
-        let valB = b[this.sort_key];
+        let valA = a[this.sortKey];
+        let valB = b[this.sortKey];
 
-        if (this.sort_key === 'priority') {
+        if (this.sortKey === 'priority') {
           const weight = { low: 1, medium: 2, high: 3 };
           valA = weight[valA] || 0;
           valB = weight[valB] || 0;
         }
 
-        if (this.sort_key == 'tags') {
+        if (this.sortKey === 'tags') {
           valA = a.tags.length;
           valB = b.tags.length;
         }
@@ -109,10 +108,10 @@ export default {
   },
   methods: {
     sortBy(key) {
-      if (this.sort_key === key) {
+      if (this.sortKey === key) {
         this.sortAscending = !this.sortAscending;
       } else {
-        this.sort_key = key;
+        this.sortKey = key;
         this.sortAscending = true;
       }
     },
