@@ -59,7 +59,7 @@
           </h2>
 
           <span
-            class="px-2 py-1 text-xs rounded-full"
+            class="mt-auto px-2 py-1 text-xs rounded-full"
             :class="getRarityClasses(displayRarity(poutine))"
           >
             {{ displayRarity(poutine) }}
@@ -122,7 +122,7 @@ export default {
         case 'legendary':
           return `${baseClass} bg-bg-attention-muted text-fg-attention`;
         default:
-          return `${baseClass} bg-bg-muted text-fg-muted`;
+          return `${baseClass} bg-bg-neutral-muted text-fg-muted`;
       }
     },
   },
