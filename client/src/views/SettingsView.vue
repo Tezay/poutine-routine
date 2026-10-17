@@ -5,8 +5,8 @@
       <button @click="dailyGoal--">-</button>
       <span>{{ dailyGoal }}</span>
       <button @click="dailyGoal++">+</button>
-      <span>tasks per day · reaching it earns {{ user.goalReward }} 🍟</span>
-      <p>🔥 {{ user.streak }} Current streak · best streak {{ user.bestStreak }} days</p>
+      <span>tasks per day · reaching it earns {{ GOAL_REWARD }} 🍟</span>
+      <p>🔥 {{ user.current_streak }} Current streak · best streak {{ user.best_streak }} days</p>
     </div>
 
     <div class="card">
@@ -43,13 +43,15 @@
 
 <script setup>
 import { ref } from 'vue';
-import { user } from '../mock/user.js';
-import { poutines } from '../mock/poutines.js';
+import user from '../mock/user.js';
+import poutines from '../mock/poutines.js';
 
-const dailyGoal = ref(user.dailyGoal);
-const companionId = ref(user.companionId);
+const GOAL_REWARD = 20;
+
+const dailyGoal = ref(user.daily_goal);
+const companionId = ref(user.companion_poutine_id);
 const email = ref(user.email);
-const password = ref(user.password);
+const password = ref('password');
 
 const ownedPoutines = poutines.filter((poutine) => poutine.quantity > 0);
 </script>
