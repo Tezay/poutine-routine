@@ -16,7 +16,7 @@ export default {
       if (this.emailError !== '' || this.passwordError !== '') {
         return;
       }
-      console.log(email.vallue);
+      console.log(this.email);
     },
   },
 };
