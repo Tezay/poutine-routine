@@ -16,7 +16,7 @@ export default {
       if (this.emailError !== '' || this.passwordError !== '') {
         return;
       }
-      console.log({ email: this.email.trim(), password: this.password });
+      console.log(email.vallue);
     },
   },
 };
