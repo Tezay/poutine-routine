@@ -3,7 +3,6 @@
     <AppTopbar title="Poutinerie" />
 
     <div class="p-6 overflow-y-auto">
-      <!-- Collection progress -->
       <section
         class="flex items-center justify-between p-4 mb-6 rounded-lg bg-bg-muted"
         aria-label="Collection progress"
@@ -17,6 +16,7 @@
             :style="{ width: progressPercentage + '%' }"
           ></div>
         </div>
+        <!-- Static for now: no field in the mock data provides this value. -->
         <div class="text-fg-muted text-sm">Next box in 2 tasks</div>
       </section>
 
@@ -24,12 +24,12 @@
         <article
           v-for="poutine in poutines"
           :key="poutine.id"
-          class="relative flex flex-col items-center p-4 rounded-xl border transition-all duration-300 z-10"
+          class="relative z-10 flex flex-col items-center p-4 rounded-xl border"
           :class="getCardClasses(poutine)"
         >
-          <!-- Glow for legendary poutines -->
+          <!-- Negative z-index keeps the glow behind the card content. -->
           <div
-            v-if="poutine.quantity > 0 && poutine.rarity === 'legendary'"
+            v-if="isOwned(poutine) && poutine.rarity === 'legendary'"
             class="absolute -inset-2 bg-bg-attention-muted border-4 border-border-accent rounded-2xl -z-10 motion-safe:animate-pulse blur-sm opacity-80"
             aria-hidden="true"
           ></div>
@@ -42,28 +42,27 @@
               ×{{ poutine.quantity }}
             </div>
 
-            <!-- Sprite (Placeholder) -->
             <div
               class="w-full aspect-square flex items-center justify-center rounded-lg border-2 border-dashed border-border-muted bg-bg-inset text-fg-muted text-sm"
               aria-hidden="true"
             >
-              <span v-if="poutine.quantity > 0">32×32 sprite</span>
+              <span v-if="isOwned(poutine)">32×32 sprite</span>
               <span v-else class="text-2xl">?</span>
             </div>
           </div>
 
           <h2
-            class="font-pixel text-fg-default mb-2 text-center"
-            :class="{ 'text-fg-muted': poutine.quantity === 0 }"
+            class="font-pixel mb-2 text-center"
+            :class="isOwned(poutine) ? 'text-fg-default' : 'text-fg-muted'"
           >
-            {{ poutine.quantity > 0 ? poutine.name : 'Locked' }}
+            {{ displayName(poutine) }}
           </h2>
 
           <span
             class="px-2 py-1 text-xs rounded-full"
-            :class="getRarityClasses(poutine.quantity > 0 ? poutine.rarity : 'unknown')"
+            :class="getRarityClasses(displayRarity(poutine))"
           >
-            {{ poutine.quantity > 0 ? poutine.rarity : 'unknown' }}
+            {{ displayRarity(poutine) }}
           </span>
         </article>
       </section>
@@ -89,7 +88,7 @@ export default {
       return this.poutines.length;
     },
     collectedCount() {
-      return this.poutines.filter((p) => p.quantity > 0).length;
+      return this.poutines.filter((poutine) => this.isOwned(poutine)).length;
     },
     progressPercentage() {
       if (this.totalCount === 0) return 0;
@@ -97,21 +96,19 @@ export default {
     },
   },
   methods: {
+    isOwned(poutine) {
+      return poutine.quantity > 0;
+    },
+    displayName(poutine) {
+      return this.isOwned(poutine) ? poutine.name : 'Locked';
+    },
+    displayRarity(poutine) {
+      return this.isOwned(poutine) ? poutine.rarity : 'unknown';
+    },
     getCardClasses(poutine) {
-      // Les effets de mouvement et d'ombre s'appliquent maintenant à TOUTES les cartes
-      const hoverEffects = 'hover:shadow-lg motion-safe:hover:-translate-y-1 hover:z-20';
-
-      if (poutine.quantity === 0) {
-        // Carte verrouillée
-        return `opacity-75 bg-bg-muted border-border-muted ${hoverEffects}`;
-      }
-      if (poutine.rarity === 'legendary') {
-        // Carte légendaire
-        return `bg-bg-default border-border-accent ${hoverEffects}`;
-      }
-
-      // Carte standard débloquée (avec en plus le changement de couleur de fond/bordure)
-      return `bg-bg-default border-border-muted hover:bg-bg-muted-hover hover:border-border-default ${hoverEffects}`;
+      if (!this.isOwned(poutine)) return 'bg-bg-muted border-dashed border-border-muted';
+      if (poutine.rarity === 'legendary') return 'bg-bg-default border-border-accent';
+      return 'bg-bg-default border-border-muted';
     },
     getRarityClasses(rarity) {
       const baseClass = 'font-medium';
@@ -124,7 +121,6 @@ export default {
           return `${baseClass} bg-bg-done-muted text-fg-done`;
         case 'legendary':
           return `${baseClass} bg-bg-attention-muted text-fg-attention`;
-        case 'unknown':
         default:
           return `${baseClass} bg-bg-muted text-fg-muted`;
       }
