@@ -7,8 +7,14 @@
     </header>
 
     <ul class="flex flex-col gap-2">
-      <li v-for="task in tasks" :key="task.id">
+      <li v-for="task in tasks" :key="task.id" class="relative">
         <TaskCard :task="task" />
+        <button
+          type="button"
+          :aria-label="`Edit task: ${task.title}`"
+          class="absolute inset-0 cursor-pointer rounded-md hover:bg-fg-default/5"
+          @click="$emit('select', task)"
+        ></button>
       </li>
     </ul>
   </section>
@@ -26,5 +32,6 @@ export default {
     dotClass: { type: String, required: true },
     tasks: { type: Array, required: true },
   },
+  emits: ['select'],
 };
 </script>
