@@ -98,13 +98,20 @@ export default {
   },
   methods: {
     getCardClasses(poutine) {
+      // Les effets de mouvement et d'ombre s'appliquent maintenant à TOUTES les cartes
+      const hoverEffects = 'hover:shadow-lg motion-safe:hover:-translate-y-1 hover:z-20';
+
       if (poutine.quantity === 0) {
-        return 'opacity-75 bg-bg-muted border-border-muted';
+        // Carte verrouillée
+        return `opacity-75 bg-bg-muted border-border-muted ${hoverEffects}`;
       }
       if (poutine.rarity === 'legendary') {
-        return 'bg-bg-default border-border-accent';
+        // Carte légendaire
+        return `bg-bg-default border-border-accent ${hoverEffects}`;
       }
-      return 'bg-bg-default border-border-muted';
+
+      // Carte standard débloquée (avec en plus le changement de couleur de fond/bordure)
+      return `bg-bg-default border-border-muted hover:bg-bg-muted-hover hover:border-border-default ${hoverEffects}`;
     },
     getRarityClasses(rarity) {
       const baseClass = 'font-medium';
