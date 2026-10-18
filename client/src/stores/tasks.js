@@ -49,7 +49,7 @@ export const useTasksStore = defineStore('tasks', {
         priority: newTask.priority,
         position: 0,
         due_at: newTask.due_at,
-        completed_at: null,
+        completed_at: newTask.status === 'done' ? now : null,
         rewarded_at: null,
         created_at: now,
         updated_at: now,
