@@ -4,6 +4,9 @@ A secure to-do application with a poutine collection. Finishing a task earns fri
 box, a box gives a random poutine. Course project for MOD8 - Advanced Web Programming (Concordia
 Continuing Education, Fall 2026).
 
+The frontend is published on GitHub Pages (mock data, no API yet):
+<https://tezay.github.io/poutine-routine/>
+
 See [`docs/milestone-1/`](docs/milestone-1) for the full write-up: problem statement, proposed
 solution, entity-relationship diagram, mockups, and project plan.
 
