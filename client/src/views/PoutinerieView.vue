@@ -1,0 +1,122 @@
+<template>
+  <AppTopbar title="Poutinerie" />
+
+  <div class="p-6">
+    <section
+      class="flex items-center justify-between p-4 mb-6 rounded-lg bg-bg-muted"
+      aria-label="Collection progress"
+    >
+      <div class="text-fg-default font-medium">
+        {{ collectedCount }} / {{ totalCount }} collected
+      </div>
+      <div class="flex-1 mx-4 h-2 rounded-full bg-bg-inset overflow-hidden" aria-hidden="true">
+        <div
+          class="h-full bg-bg-primary-emphasis transition-all duration-300"
+          :style="{ width: progressPercentage + '%' }"
+        ></div>
+      </div>
+      <!-- Static for now: no field in the mock data provides this value. -->
+      <div class="text-fg-muted text-sm">Next box in 2 tasks</div>
+    </section>
+
+    <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
+      <article
+        v-for="poutine in poutines"
+        :key="poutine.id"
+        class="flex flex-col items-center p-4 rounded-xl border"
+        :class="getCardClasses(poutine)"
+      >
+        <div class="w-full relative mb-4 mt-4">
+          <div
+            v-if="poutine.quantity > 1"
+            class="absolute bottom-full right-0 mb-1 text-xs text-fg-muted font-medium"
+          >
+            ×{{ poutine.quantity }}
+          </div>
+
+          <div class="flex aspect-square w-full items-center justify-center rounded-lg bg-bg-inset">
+            <PoutineSprite
+              :poutine="poutine"
+              class="size-24"
+              :class="{ 'brightness-0 opacity-30': !isOwned(poutine) }"
+            />
+          </div>
+        </div>
+
+        <h2
+          class="font-pixel mb-2 text-center"
+          :class="isOwned(poutine) ? 'text-fg-default' : 'text-fg-muted'"
+        >
+          {{ displayName(poutine) }}
+        </h2>
+
+        <span
+          class="mt-auto px-2 py-1 text-xs rounded-full"
+          :class="getRarityClasses(displayRarity(poutine))"
+        >
+          {{ displayRarity(poutine) }}
+        </span>
+      </article>
+    </section>
+  </div>
+</template>
+
+<script>
+import AppTopbar from '../components/AppTopbar.vue';
+import PoutineSprite from '../components/PoutineSprite.vue';
+import poutines from '../mock/poutines.js';
+
+export default {
+  components: {
+    AppTopbar,
+    PoutineSprite,
+  },
+  data() {
+    return {
+      poutines,
+    };
+  },
+  computed: {
+    totalCount() {
+      return this.poutines.length;
+    },
+    collectedCount() {
+      return this.poutines.filter((poutine) => this.isOwned(poutine)).length;
+    },
+    progressPercentage() {
+      if (this.totalCount === 0) return 0;
+      return Math.round((this.collectedCount / this.totalCount) * 100);
+    },
+  },
+  methods: {
+    isOwned(poutine) {
+      return poutine.quantity > 0;
+    },
+    displayName(poutine) {
+      return this.isOwned(poutine) ? poutine.name : 'Locked';
+    },
+    displayRarity(poutine) {
+      return this.isOwned(poutine) ? poutine.rarity : 'unknown';
+    },
+    getCardClasses(poutine) {
+      if (!this.isOwned(poutine)) return 'bg-bg-muted border-dashed border-border-muted';
+      return 'bg-bg-default border-border-muted';
+    },
+    getRarityClasses(rarity) {
+      const baseClass = 'font-medium';
+      switch (rarity) {
+        case 'common':
+          return `${baseClass} bg-bg-neutral-muted text-fg-muted`;
+        case 'rare':
+          return `${baseClass} bg-bg-accent-muted text-fg-accent`;
+        case 'epic':
+          return `${baseClass} bg-bg-done-muted text-fg-done`;
+        case 'legendary':
+          return `${baseClass} bg-bg-attention-muted text-fg-attention`;
+        default:
+          return `${baseClass} bg-bg-neutral-muted text-fg-muted`;
+      }
+    },
+  },
+};
+</script>
