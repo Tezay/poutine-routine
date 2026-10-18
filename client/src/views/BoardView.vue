@@ -39,7 +39,7 @@
       :key="column.status"
       :title="column.label"
       :dot-class="column.dotClass"
-      :tasks="tasksStore.tasksByStatus(column.status)"
+      :tasks="tasksByStatus(column.status)"
       @select="openEditTaskModal"
     />
   </div>
