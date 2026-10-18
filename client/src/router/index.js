@@ -8,9 +8,9 @@ import LoginView from '../views/LoginView.vue';
 const routes = [
   { path: '/', name: 'board', component: BoardView },
   { path: '/table', name: 'table', component: TableView },
-  { path: '/register', name: 'register', component: RegisterView },
+  { path: '/register', name: 'register', component: RegisterView, meta: { layout: 'auth' } },
+  { path: '/login', name: 'login', component: LoginView, meta: { layout: 'auth' } },
   { path: '/poutinerie', name: 'poutinerie', component: PoutinerieView },
-  { path: '/login', name: 'login', component: LoginView },
 ];
 
 const router = createRouter({

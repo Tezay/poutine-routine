@@ -68,15 +68,20 @@
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
-import tasks from '../mock/tasks.js';
+import { useTasksStore } from '../stores/tasks.js';
 
 export default {
   components: {
     AppTopbar,
   },
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
   data() {
     return {
-      tasks,
       sortKey: 'due_at',
       sortAscending: true,
       columns: [
@@ -90,7 +95,7 @@ export default {
   },
   computed: {
     sortedTasks() {
-      return [...this.tasks].sort((a, b) => {
+      return [...this.tasksStore.visibleTasks].sort((a, b) => {
         let valA = a[this.sortKey];
         let valB = b[this.sortKey];
 
