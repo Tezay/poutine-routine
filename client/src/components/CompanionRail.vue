@@ -6,11 +6,7 @@
       v-if="companion"
       class="flex flex-col items-center gap-3 rounded-lg border border-border-default bg-bg-muted p-4 text-center"
     >
-      <div
-        class="flex size-40 items-center justify-center border border-dashed border-border-default bg-bg-inset text-sm text-fg-muted"
-      >
-        32x32 sprite
-      </div>
+      <PoutineSprite :slug="companion.slug" class="size-48" />
       <h3 class="font-pixel text-xl">{{ companion.name }}</h3>
       <p
         class="rounded-md border border-border-muted bg-bg-default px-3 py-1.5 text-sm text-fg-muted"
@@ -34,10 +30,14 @@
 </template>
 
 <script>
+import PoutineSprite from './PoutineSprite.vue';
 import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
 
 export default {
+  components: {
+    PoutineSprite,
+  },
   data() {
     return {
       user,
