@@ -3,6 +3,7 @@
     <h1 class="text-lg font-semibold">{{ title }}</h1>
 
     <input
+      v-model="searchQuery"
       type="search"
       placeholder="Search tasks..."
       aria-label="Search tasks"
@@ -24,6 +25,8 @@
 
 <script>
 import user from '../mock/user.js';
+import { mapWritableState } from 'pinia';
+import { useTasksStore } from '../stores/tasks.js';
 
 export default {
   props: {
@@ -35,6 +38,9 @@ export default {
     return {
       user,
     };
+  },
+  computed: {
+    ...mapWritableState(useTasksStore, ['searchQuery']),
   },
 };
 </script>

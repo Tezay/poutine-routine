@@ -8,14 +8,26 @@ export const useTasksStore = defineStore('tasks', {
       tasks,
       tags,
       activeTagId: null,
+      searchQuery: '',
     };
   },
   getters: {
     visibleTasks(state) {
-      if (state.activeTagId === null) {
-        return state.tasks;
+      let result = state.tasks;
+      
+      if (state.activeTagId !== null) {
+        result = result.filter((task) => task.tags.some((tag) => tag.id === state.activeTagId));
       }
-      return state.tasks.filter((task) => task.tags.some((tag) => tag.id === state.activeTagId));
+      
+      if (state.searchQuery.trim() !== '') {
+        const query = state.searchQuery.toLowerCase();
+        result = result.filter((task) => 
+        task.title.toLowerCase().includes(query) || 
+        task.tags.some((tag) => tag.name.toLowerCase().includes(query))
+      );
+      }
+      
+      return result;
     },
     tasksByStatus() {
       return (status) =>

@@ -2,7 +2,7 @@
   <AppTopbar title="My board" action-label="New task" />
 
   <div
-    v-if="tasksStore.tasks.length === 0"
+    v-if="tasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
     <div
@@ -22,13 +22,23 @@
     </button>
   </div>
 
+  <div
+    v-else-if="visibleTasks.length === 0"
+    class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
+  >
+    <h2 class="mt-6 text-xl font-semibold">No matching tasks</h2>
+    <p class="mt-2 text-fg-muted">
+      Try clearing your search or selecting a different tag.
+    </p>
+  </div>
+
   <div v-else class="grid grid-cols-3 items-start gap-4 p-6">
     <TaskColumn
       v-for="column in columns"
       :key="column.status"
       :title="column.label"
       :dot-class="column.dotClass"
-      :tasks="tasksStore.tasksByStatus(column.status)"
+      :tasks="tasksByStatus(column.status)"
     />
   </div>
 </template>
@@ -37,17 +47,15 @@
 import AppTopbar from '../components/AppTopbar.vue';
 import TaskColumn from '../components/TaskColumn.vue';
 import { useTasksStore } from '../stores/tasks.js';
+import { mapState } from 'pinia';
 
 export default {
   components: {
     AppTopbar,
     TaskColumn,
   },
-  setup() {
-    const tasksStore = useTasksStore();
-    return {
-      tasksStore,
-    };
+  computed: {
+    ...mapState(useTasksStore, ['tasks', 'visibleTasks', 'tasksByStatus']),
   },
   data() {
     return {
