@@ -31,6 +31,7 @@
       :dot-class="column.dotClass"
       :tasks="tasksStore.tasksByStatus(column.status)"
       @select="openEditTaskModal"
+      @drop-task="moveDroppedTask($event, column.status)"
     />
   </div>
 
@@ -110,10 +111,13 @@ export default {
         tags: fields.tags,
       });
       if (fields.status !== this.editedTask.status) {
-        const columnSize = this.tasksStore.tasks.filter(
-          (task) => task.status === fields.status,
-        ).length;
-        this.tasksStore.moveTask(id, fields.status, columnSize);
+        this.tasksStore.moveTask(id, fields.status);
+      }
+    },
+    moveDroppedTask(taskId, status) {
+      const droppedTask = this.tasksStore.tasks.find((task) => task.id === taskId);
+      if (droppedTask && droppedTask.status !== status) {
+        this.tasksStore.moveTask(taskId, status);
       }
     },
     deleteEditedTask() {
