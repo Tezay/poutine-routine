@@ -25,7 +25,7 @@ export default {
 <template>
   <form
     novalidate
-    class="mx-auto mt-8 flex max-w-md flex-col gap-4 rounded-xl border border-border-muted bg-bg-default p-8"
+    class="flex w-full max-w-md flex-col gap-4 rounded-xl border border-border-muted bg-bg-default p-8"
     @submit.prevent="onSubmit"
   >
     <div
