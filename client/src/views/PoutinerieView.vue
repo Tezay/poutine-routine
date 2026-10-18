@@ -36,7 +36,7 @@
 
           <div class="flex aspect-square w-full items-center justify-center rounded-lg bg-bg-inset">
             <PoutineSprite
-              :poutine="poutine"
+              :slug="poutine.slug"
               class="size-24"
               :class="{ 'brightness-0 opacity-30': !isOwned(poutine) }"
             />

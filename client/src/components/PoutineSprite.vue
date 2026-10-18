@@ -5,11 +5,11 @@
 <script>
 export default {
   props: {
-    poutine: { type: Object, required: true },
+    slug: { type: String, required: true },
   },
   computed: {
     src() {
-      return new URL(`../assets/poutines/${this.poutine.slug}.png`, import.meta.url).href;
+      return new URL(`../assets/poutines/${this.slug}.png`, import.meta.url).href;
     },
   },
 };

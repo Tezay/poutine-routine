@@ -5,11 +5,7 @@
     v-if="tasksStore.tasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
-    <div
-      class="flex h-36 w-36 items-center justify-center rounded-lg border border-dashed border-border-default bg-bg-inset text-sm text-fg-muted"
-    >
-      illustration
-    </div>
+    <MascotSprite class="size-48" />
     <h2 class="mt-6 text-xl font-semibold">Nothing on the menu yet</h2>
     <p class="mt-2 text-fg-muted">
       Add your first task. Finish it and you will earn your first 10 fries.
@@ -47,6 +43,7 @@
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
+import MascotSprite from '../components/MascotSprite.vue';
 import TaskColumn from '../components/TaskColumn.vue';
 import TaskModal from '../components/TaskModal.vue';
 import { useTasksStore } from '../stores/tasks.js';
@@ -54,6 +51,7 @@ import { useTasksStore } from '../stores/tasks.js';
 export default {
   components: {
     AppTopbar,
+    MascotSprite,
     TaskColumn,
     TaskModal,
   },
