@@ -1,11 +1,6 @@
 <template>
   <div class="w-full max-w-md rounded-xl border border-border-muted bg-bg-default p-10 text-center">
-    <div
-      aria-hidden="true"
-      class="mx-auto mb-6 flex size-28 items-center justify-center rounded-xl border-2 border-dashed border-border-default bg-bg-inset text-sm text-fg-muted"
-    >
-      mascot
-    </div>
+    <MascotSprite class="mx-auto mb-6 size-24" />
 
     <h1 class="mb-2 text-2xl font-bold text-fg-default">Create your account</h1>
     <p class="mb-6 text-fg-muted">Finish tasks, earn fries, collect poutines.</p>
@@ -64,7 +59,12 @@
 </template>
 
 <script>
+import MascotSprite from '../components/MascotSprite.vue';
+
 export default {
+  components: {
+    MascotSprite,
+  },
   data() {
     return {
       form: {
