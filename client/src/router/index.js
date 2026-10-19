@@ -4,6 +4,7 @@ import TableView from '../views/TableView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import PoutinerieView from '../views/PoutinerieView.vue';
 import LoginView from '../views/LoginView.vue';
+import SettingsView from '../views/SettingsView.vue';
 
 const routes = [
   { path: '/', name: 'board', component: BoardView },
@@ -11,6 +12,7 @@ const routes = [
   { path: '/register', name: 'register', component: RegisterView, meta: { layout: 'auth' } },
   { path: '/login', name: 'login', component: LoginView, meta: { layout: 'auth' } },
   { path: '/poutinerie', name: 'poutinerie', component: PoutinerieView },
+  { path: '/settings', name: 'settings', component: SettingsView },
 ];
 
 const router = createRouter({
