@@ -69,6 +69,18 @@
   --color-border-muted: var(--border-muted);
   --color-border-accent: var(--border-accent);
   --color-border-danger: var(--border-danger);
+
+  --animate-edge-pulse: edge-pulse 1s ease-in-out 2;
+
+  @keyframes edge-pulse {
+    0%,
+    100% {
+      box-shadow: inset 0 0 0 0 transparent;
+    }
+    50% {
+      box-shadow: inset 0 0 0 8px var(--border-danger);
+    }
+  }
 }
 
 /* Global layout dimensions, used directly with var() */

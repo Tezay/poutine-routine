@@ -6,11 +6,7 @@
       v-if="companion"
       class="flex flex-col items-center gap-3 rounded-lg border border-border-default bg-bg-muted p-4 text-center"
     >
-      <div
-        class="flex size-40 items-center justify-center border border-dashed border-border-default bg-bg-inset text-sm text-fg-muted"
-      >
-        32x32 sprite
-      </div>
+      <PoutineSprite :slug="companion.slug" class="size-48" />
       <h3 class="font-pixel text-xl">{{ companion.name }}</h3>
       <p
         class="rounded-md border border-border-muted bg-bg-default px-3 py-1.5 text-sm text-fg-muted"
@@ -30,18 +26,35 @@
         <span>🔥 {{ user.current_streak }} days</span>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="w-full rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+      @click="showBoxModal = true"
+    >
+      Open a box · {{ boxCost }} 🍟
+    </button>
+    <BoxOpeningModal v-if="showBoxModal" :box-cost="boxCost" @close="showBoxModal = false" />
   </aside>
 </template>
 
 <script>
+import PoutineSprite from './PoutineSprite.vue';
 import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
+import BoxOpeningModal from './BoxOpeningModal.vue';
 
 export default {
+  components: {
+    PoutineSprite,
+    BoxOpeningModal,
+  },
   data() {
     return {
       user,
       poutines,
+      boxCost: 50,
+      showBoxModal: false,
     };
   },
   computed: {

@@ -20,9 +20,18 @@
     <section>
       <h2 class="px-2 pb-1 text-xs font-semibold uppercase text-fg-muted">Tags</h2>
       <ul class="flex flex-col gap-0.5">
-        <li v-for="tag in tags" :key="tag.id" class="flex items-center gap-2 px-2 py-1.5">
-          <span class="size-2 rounded-full" :style="{ backgroundColor: tag.color }"></span>
-          <span>{{ tag.name }}</span>
+        <li v-for="tag in tasksStore.tags" :key="tag.id">
+          <button
+            type="button"
+            :aria-pressed="isActive(tag.id)"
+            class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-bg-neutral-muted"
+            :class="{ 'bg-bg-neutral-muted font-semibold': isActive(tag.id) }"
+            @click="tasksStore.toggleTag(tag.id)"
+          >
+            <span class="size-2 rounded-full" :style="{ backgroundColor: tag.color }"></span>
+            <span>{{ tag.name }}</span>
+            <span class="ml-auto text-xs text-fg-muted">{{ taskCount(tag.id) }}</span>
+          </button>
         </li>
       </ul>
     </section>
@@ -30,12 +39,17 @@
 </template>
 
 <script>
-import tags from '../mock/tags.js';
+import { useTasksStore } from '../stores/tasks.js';
 
 export default {
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
   data() {
     return {
-      tags,
       links: [
         { label: 'Board', to: '/' },
         { label: 'Table', to: '/table' },
@@ -43,6 +57,15 @@ export default {
         { label: 'Settings', to: '/settings' },
       ],
     };
+  },
+  methods: {
+    isActive(tagId) {
+      return this.tasksStore.activeTagIds.includes(tagId);
+    },
+    taskCount(tagId) {
+      return this.tasksStore.tasks.filter((task) => task.tags.some((tag) => tag.id === tagId))
+        .length;
+    },
   },
 };
 </script>
