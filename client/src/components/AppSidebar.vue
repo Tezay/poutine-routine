@@ -10,9 +10,10 @@
         v-for="link in links"
         :key="link.to"
         :to="link.to"
-        class="rounded-md px-2 py-1.5 hover:bg-bg-neutral-muted"
+        class="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-bg-neutral-muted"
         active-class="bg-bg-neutral-muted font-semibold"
       >
+        <img :src="iconUrl(link.icon)" alt="" class="size-4" />
         {{ link.label }}
       </router-link>
     </nav>
@@ -51,14 +52,17 @@ export default {
   data() {
     return {
       links: [
-        { label: 'Board', to: '/' },
-        { label: 'Table', to: '/table' },
-        { label: 'Poutinerie', to: '/poutinerie' },
-        { label: 'Settings', to: '/settings' },
+        { label: 'Board', to: '/', icon: 'columns-3' },
+        { label: 'Table', to: '/table', icon: 'table' },
+        { label: 'Poutinerie', to: '/poutinerie', icon: 'playing-cards-fan' },
+        { label: 'Settings', to: '/settings', icon: 'settings' },
       ],
     };
   },
   methods: {
+    iconUrl(name) {
+      return new URL(`../assets/icons/${name}.svg`, import.meta.url).href;
+    },
     isActive(tagId) {
       return this.tasksStore.activeTagIds.includes(tagId);
     },

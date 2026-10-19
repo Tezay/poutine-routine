@@ -39,21 +39,14 @@
     />
   </div>
 
-  <TaskModal
-    v-if="isModalOpen"
-    :task="editedTask"
-    :tags="tasksStore.tags"
-    @close="closeModal"
-    @save="saveTask"
-    @delete="deleteEditedTask"
-  />
+  <TaskEditor ref="editor" />
 </template>
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
 import MascotSprite from '../components/MascotSprite.vue';
 import TaskColumn from '../components/TaskColumn.vue';
-import TaskModal from '../components/TaskModal.vue';
+import TaskEditor from '../components/TaskEditor.vue';
 import { useTasksStore } from '../stores/tasks.js';
 
 export default {
@@ -61,7 +54,7 @@ export default {
     AppTopbar,
     MascotSprite,
     TaskColumn,
-    TaskModal,
+    TaskEditor,
   },
   setup() {
     const tasksStore = useTasksStore();
@@ -71,9 +64,6 @@ export default {
   },
   data() {
     return {
-      isModalOpen: false,
-      editedTask: null,
-      openerElement: null,
       columns: [
         { status: 'todo', label: 'To Do', dotClass: 'text-fg-success' },
         { status: 'doing', label: 'Doing', dotClass: 'text-fg-attention' },
@@ -83,52 +73,16 @@ export default {
   },
   methods: {
     openCreateTaskModal() {
-      this.openerElement = document.activeElement;
-      this.editedTask = null;
-      this.isModalOpen = true;
+      this.$refs.editor.open();
     },
     openEditTaskModal(task) {
-      this.openerElement = document.activeElement;
-      this.editedTask = task;
-      this.isModalOpen = true;
-    },
-    closeModal() {
-      this.isModalOpen = false;
-      this.editedTask = null;
-      if (this.openerElement) {
-        this.openerElement.focus();
-      }
-    },
-    saveTask(fields) {
-      if (this.editedTask === null) {
-        this.tasksStore.addTask(fields);
-      } else {
-        this.updateEditedTask(fields);
-      }
-      this.closeModal();
-    },
-    updateEditedTask(fields) {
-      const id = this.editedTask.id;
-      this.tasksStore.updateTask(id, {
-        title: fields.title,
-        description: fields.description,
-        priority: fields.priority,
-        due_at: fields.due_at,
-        tags: fields.tags,
-      });
-      if (fields.status !== this.editedTask.status) {
-        this.tasksStore.moveTask(id, fields.status);
-      }
+      this.$refs.editor.open(task);
     },
     moveDroppedTask(taskId, status) {
       const droppedTask = this.tasksStore.tasks.find((task) => task.id === taskId);
       if (droppedTask && droppedTask.status !== status) {
         this.tasksStore.moveTask(taskId, status);
       }
-    },
-    deleteEditedTask() {
-      this.tasksStore.deleteTask(this.editedTask.id);
-      this.closeModal();
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <AppTopbar title="My board" action-label="New task" />
+  <AppTopbar title="My board" action-label="New task" @action="openCreateTaskModal" />
 
   <div
     v-if="sortedTasks.length === 0"
@@ -36,7 +36,13 @@
       <tbody class="divide-y divide-border-default">
         <tr v-for="task in sortedTasks" :key="task.id" class="hover:bg-bg-muted-hover">
           <td class="px-4 py-3 font-medium text-fg-default">
-            {{ task.title }}
+            <button
+              type="button"
+              class="cursor-pointer text-left hover:underline"
+              @click="openEditTaskModal(task)"
+            >
+              {{ task.title }}
+            </button>
           </td>
           <td class="px-4 py-3">
             <span :class="['rounded-full px-2 py-0.5 text-xs font-bold', statusClass(task.status)]">
@@ -72,15 +78,19 @@
       </tbody>
     </table>
   </div>
+
+  <TaskEditor ref="editor" />
 </template>
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
+import TaskEditor from '../components/TaskEditor.vue';
 import { useTasksStore } from '../stores/tasks.js';
 
 export default {
   components: {
     AppTopbar,
+    TaskEditor,
   },
   setup() {
     const tasksStore = useTasksStore();
@@ -129,6 +139,12 @@ export default {
     },
   },
   methods: {
+    openCreateTaskModal() {
+      this.$refs.editor.open();
+    },
+    openEditTaskModal(task) {
+      this.$refs.editor.open(task);
+    },
     sortBy(key) {
       if (this.sortKey === key) {
         this.sortAscending = !this.sortAscending;

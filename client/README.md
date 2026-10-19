@@ -20,6 +20,9 @@ We used the same configuration as during de course's Lesson 4 material (`npm cre
 Vue Router 4, Tailwind v4 through its Vite plugin). ESLint, Prettier and the CI workflow are
 additions on top of that, that we adopted for our project.
 
+The sidebar icons come from [Lucide](https://lucide.dev) (ISC license). The SVG files are copied in
+`src/assets/icons/`, there is no icon library.
+
 ## Prerequisites
 
 - **Node.js 20 or later** and npm. Check your version with `node --version`.

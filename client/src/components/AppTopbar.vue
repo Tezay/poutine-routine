@@ -1,5 +1,7 @@
 <template>
-  <header class="flex items-center gap-3 border-b border-border-default px-6 py-3">
+  <header
+    class="sticky top-0 z-10 flex items-center gap-3 border-b border-border-default bg-bg-default px-6 py-3"
+  >
     <h1 class="text-lg font-semibold">{{ title }}</h1>
 
     <input
