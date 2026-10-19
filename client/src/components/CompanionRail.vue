@@ -26,6 +26,15 @@
         <span>🔥 {{ user.current_streak }} days</span>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="w-full rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+      @click="showBoxModal = true"
+    >
+      Open a box · 50 🍟
+    </button>
+    <BoxOpeningModal v-if="showBoxModal" @close="showBoxModal = false" />
   </aside>
 </template>
 
@@ -33,15 +42,18 @@
 import PoutineSprite from './PoutineSprite.vue';
 import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
+import BoxOpeningModal from './BoxOpeningModal.vue';
 
 export default {
   components: {
     PoutineSprite,
+    BoxOpeningModal,
   },
   data() {
     return {
       user,
       poutines,
+      showBoxModal: false,
     };
   },
   computed: {
