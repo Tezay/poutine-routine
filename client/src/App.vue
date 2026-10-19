@@ -7,10 +7,10 @@
   </main>
   <div
     v-else
-    class="grid min-h-screen grid-cols-[var(--sidebar-width)_minmax(0,1fr)_var(--rail-width)]"
+    class="grid h-screen grid-cols-[var(--sidebar-width)_minmax(0,1fr)_var(--rail-width)] grid-rows-1"
   >
     <AppSidebar />
-    <main>
+    <main class="overflow-y-auto">
       <router-view />
     </main>
     <CompanionRail />
