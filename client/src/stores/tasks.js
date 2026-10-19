@@ -7,15 +7,30 @@ export const useTasksStore = defineStore('tasks', {
     return {
       tasks,
       tags,
-      activeTagId: null,
+      activeTagIds: [],
+      searchQuery: '',
     };
   },
   getters: {
     visibleTasks(state) {
-      if (state.activeTagId === null) {
-        return state.tasks;
+      let result = state.tasks;
+
+      if (state.activeTagIds.length > 0) {
+        result = result.filter((task) =>
+          task.tags.some((tag) => state.activeTagIds.includes(tag.id)),
+        );
       }
-      return state.tasks.filter((task) => task.tags.some((tag) => tag.id === state.activeTagId));
+
+      if (state.searchQuery.trim() !== '') {
+        const query = state.searchQuery.toLowerCase();
+        result = result.filter(
+          (task) =>
+            task.title.toLowerCase().includes(query) ||
+            task.tags.some((tag) => tag.name.toLowerCase().includes(query)),
+        );
+      }
+
+      return result;
     },
     tasksByStatus() {
       return (status) =>
@@ -67,6 +82,13 @@ export const useTasksStore = defineStore('tasks', {
         .filter((task) => task.status === status && task.id !== id)
         .sort((a, b) => a.position - b.position);
       movedTask.position = column.length ? column[column.length - 1].position + 1 : 0;
+    },
+    toggleTag(id) {
+      if (this.activeTagIds.includes(id)) {
+        this.activeTagIds = this.activeTagIds.filter((tagId) => tagId !== id);
+      } else {
+        this.activeTagIds.push(id);
+      }
     },
   },
 });

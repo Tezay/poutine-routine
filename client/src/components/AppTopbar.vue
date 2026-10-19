@@ -3,6 +3,7 @@
     <h1 class="text-lg font-semibold">{{ title }}</h1>
 
     <input
+      v-model="tasksStore.searchQuery"
       type="search"
       placeholder="Search tasks..."
       aria-label="Search tasks"
@@ -24,6 +25,7 @@
 
 <script>
 import user from '../mock/user.js';
+import { useTasksStore } from '../stores/tasks.js';
 
 export default {
   props: {
@@ -31,6 +33,12 @@ export default {
     actionLabel: { type: String, default: '' },
   },
   emits: ['action'],
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
   data() {
     return {
       user,

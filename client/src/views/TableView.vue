@@ -1,7 +1,15 @@
 <template>
   <AppTopbar title="My board" action-label="New task" />
 
-  <div class="m-6 overflow-hidden rounded-lg border border-border-default bg-bg-default">
+  <div
+    v-if="sortedTasks.length === 0"
+    class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
+  >
+    <h2 class="text-xl font-semibold">No matching tasks</h2>
+    <p class="mt-2 text-fg-muted">Try clearing your search or selecting a different tag.</p>
+  </div>
+
+  <div v-else class="m-6 overflow-hidden rounded-lg border border-border-default bg-bg-default">
     <table class="w-full text-left text-sm">
       <thead
         class="border-b border-border-default bg-bg-muted text-xs font-medium text-fg-muted uppercase"

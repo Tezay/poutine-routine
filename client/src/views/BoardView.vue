@@ -19,6 +19,14 @@
     </button>
   </div>
 
+  <div
+    v-else-if="tasksStore.visibleTasks.length === 0"
+    class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
+  >
+    <h2 class="text-xl font-semibold">No matching tasks</h2>
+    <p class="mt-2 text-fg-muted">Try clearing your search or selecting a different tag.</p>
+  </div>
+
   <div v-else class="grid grid-cols-3 items-start gap-4 p-6">
     <TaskColumn
       v-for="column in columns"
