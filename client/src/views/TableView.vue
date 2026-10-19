@@ -192,5 +192,6 @@ export default {
         return 'bg-bg-muted text-fg-muted';
       },
     },
-  };
+  }
+}
   </script>
