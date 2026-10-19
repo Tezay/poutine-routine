@@ -62,14 +62,14 @@ export default {
       return this.tasks.filter((task) => task.tags.some((tag) => tag.id === id)).length;
     },
     toggleTag(id, event) {
-      const isMultiSelect = event.ctrlKey || event.metaKey; //metaKey for Mac users
+      const isMultiSelect = event.ctrlKey || event.metaKey;
 
       if (isMultiSelect) {
         const index = this.activeTagIds.indexOf(id);
         if (index === -1) {
           this.activeTagIds.push(id);
         } else {
-          this.activeTagIds.splice(index, 1); // splice to remove the tagId from the array at the found index
+          this.activeTagIds.splice(index, 1);
         }
       } else {
         if (this.activeTagIds.length === 1 && this.activeTagIds[0] === id) {
