@@ -7,7 +7,7 @@ export const useTasksStore = defineStore('tasks', {
     return {
       tasks,
       tags,
-      activeTagId: null,
+      activeTagIds: [],
       searchQuery: '',
     };
   },
@@ -15,8 +15,10 @@ export const useTasksStore = defineStore('tasks', {
     visibleTasks(state) {
       let result = state.tasks;
 
-      if (state.activeTagId !== null) {
-        result = result.filter((task) => task.tags.some((tag) => tag.id === state.activeTagId));
+      if (state.activeTagIds.length > 0) {
+        result = result.filter((task) =>
+          task.tags.some((tag) => state.activeTagIds.includes(tag.id)),
+        );
       }
 
       if (state.searchQuery.trim() !== '') {

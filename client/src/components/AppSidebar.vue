@@ -24,8 +24,8 @@
           v-for="tag in tags"
           :key="tag.id"
           class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 hover:bg-bg-neutral-muted"
-          :class="{ 'bg-bg-neutral-muted font-semibold': activeTagId === tag.id }"
-          @click="activeTagId = activeTagId === tag.id ? null : tag.id"
+          :class="{ 'bg-bg-neutral-muted font-semibold': activeTagIds.includes(tag.id) }"
+          @click="toggleTag(tag.id, $event)"
         >
           <span class="size-2 rounded-full" :style="{ backgroundColor: tag.color }"></span>
           <span>{{ tag.name }}</span>
@@ -55,11 +55,29 @@ export default {
   },
   computed: {
     ...mapState(useTasksStore, ['tasks']),
-    ...mapWritableState(useTasksStore, ['activeTagId']),
+    ...mapWritableState(useTasksStore, ['activeTagIds']),
   },
   methods: {
     getTagCount(id) {
       return this.tasks.filter((task) => task.tags.some((tag) => tag.id === id)).length;
+    },
+    toggleTag(id, event) {
+      const isMultiSelect = event.ctrlKey || event.metaKey; //metaKey for Mac users
+
+      if (isMultiSelect) {
+        const index = this.activeTagIds.indexOf(id);
+        if (index === -1) {
+          this.activeTagIds.push(id);
+        } else {
+          this.activeTagIds.splice(index, 1); // splice to remove the tagId from the array at the found index
+        }
+      } else {
+        if (this.activeTagIds.length === 1 && this.activeTagIds[0] === id) {
+          this.activeTagIds = [];
+        } else {
+          this.activeTagIds = [id];
+        }
+      }
     },
   },
 };
