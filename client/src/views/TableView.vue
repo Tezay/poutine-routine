@@ -66,14 +66,58 @@
     </div>
   </template>
 
-  <script>
-  import AppTopbar from '../components/AppTopbar.vue';
-  import { useTasksStore } from '../stores/tasks.js';
-  import { mapState } from 'pinia';
+<script>
+import AppTopbar from '../components/AppTopbar.vue';
+import { useTasksStore } from '../stores/tasks.js';
 
-  export default {
-    components: {
-      AppTopbar,
+export default {
+  components: {
+    AppTopbar,
+  },
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
+  data() {
+    return {
+      sortKey: 'due_at',
+      sortAscending: true,
+      columns: [
+        { key: 'title', label: 'Title' },
+        { key: 'status', label: 'Status' },
+        { key: 'tags', label: 'Tags' },
+        { key: 'due_at', label: 'Due' },
+        { key: 'priority', label: 'Priority' },
+      ],
+    };
+  },
+  computed: {
+    sortedTasks() {
+      return [...this.tasksStore.visibleTasks].sort((a, b) => {
+        let valA = a[this.sortKey];
+        let valB = b[this.sortKey];
+
+        if (this.sortKey === 'priority') {
+          const weight = { low: 1, medium: 2, high: 3 };
+          valA = weight[valA] || 0;
+          valB = weight[valB] || 0;
+        }
+
+        if (this.sortKey === 'tags') {
+          valA = a.tags.length;
+          valB = b.tags.length;
+        }
+
+        if (valA === valB) return 0;
+
+        if (valA === null || valA === undefined) return 1;
+        if (valB === null || valB === undefined) return -1;
+
+        const comparison = valA > valB ? 1 : -1;
+        return this.sortAscending ? comparison : -comparison;
+      });
     },
     data() {
       return {

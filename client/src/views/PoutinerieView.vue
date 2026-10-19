@@ -1,86 +1,79 @@
 <template>
-  <div class="flex flex-col h-full bg-bg-default">
-    <AppTopbar title="Poutinerie" />
+  <AppTopbar title="Poutinerie" />
 
-    <div class="p-6 overflow-y-auto">
-      <section
-        class="flex items-center justify-between p-4 mb-6 rounded-lg bg-bg-muted"
-        aria-label="Collection progress"
+  <div class="p-6">
+    <section
+      class="flex items-center justify-between p-4 mb-6 rounded-lg bg-bg-muted"
+      aria-label="Collection progress"
+    >
+      <div class="text-fg-default font-medium">
+        {{ collectedCount }} / {{ totalCount }} collected
+      </div>
+      <div class="flex-1 mx-4 h-2 rounded-full bg-bg-inset overflow-hidden" aria-hidden="true">
+        <div
+          class="h-full bg-bg-primary-emphasis transition-all duration-300"
+          :style="{ width: progressPercentage + '%' }"
+        ></div>
+      </div>
+      <!-- Static for now: no field in the mock data provides this value. -->
+      <div class="text-fg-muted text-sm">Next box in 2 tasks</div>
+    </section>
+
+    <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
+      <article
+        v-for="poutine in poutines"
+        :key="poutine.id"
+        class="flex flex-col items-center p-4 rounded-xl border"
+        :class="getCardClasses(poutine)"
       >
-        <div class="text-fg-default font-medium">
-          {{ collectedCount }} / {{ totalCount }} collected
-        </div>
-        <div class="flex-1 mx-4 h-2 rounded-full bg-bg-inset overflow-hidden" aria-hidden="true">
+        <div class="w-full relative mb-4 mt-4">
           <div
-            class="h-full bg-bg-primary-emphasis transition-all duration-300"
-            :style="{ width: progressPercentage + '%' }"
-          ></div>
-        </div>
-        <!-- Static for now: no field in the mock data provides this value. -->
-        <div class="text-fg-muted text-sm">Next box in 2 tasks</div>
-      </section>
-
-      <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
-        <article
-          v-for="poutine in poutines"
-          :key="poutine.id"
-          class="relative z-10 flex flex-col items-center p-4 rounded-xl border"
-          :class="getCardClasses(poutine)"
-        >
-          <!-- Negative z-index keeps the glow behind the card content. -->
-          <div
-            v-if="isOwned(poutine) && poutine.rarity === 'legendary'"
-            class="absolute -inset-2 bg-bg-attention-muted border-4 border-border-accent rounded-2xl -z-10 motion-safe:animate-pulse blur-sm opacity-80"
-            aria-hidden="true"
-          ></div>
-
-          <div class="w-full relative mb-4 mt-4">
-            <div
-              v-if="poutine.quantity > 1"
-              class="absolute bottom-full right-0 mb-1 text-xs text-fg-muted font-medium"
-            >
-              ×{{ poutine.quantity }}
-            </div>
-
-            <div
-              class="w-full aspect-square flex items-center justify-center rounded-lg border-2 border-dashed border-border-muted bg-bg-inset text-fg-muted text-sm"
-              aria-hidden="true"
-            >
-              <span v-if="isOwned(poutine)">32×32 sprite</span>
-              <span v-else class="text-2xl">?</span>
-            </div>
+            v-if="poutine.quantity > 1"
+            class="absolute bottom-full right-0 mb-1 text-xs text-fg-muted font-medium"
+          >
+            ×{{ poutine.quantity }}
           </div>
 
-          <h2
-            class="font-pixel mb-2 text-center"
-            :class="isOwned(poutine) ? 'text-fg-default' : 'text-fg-muted'"
-          >
-            {{ displayName(poutine) }}
-          </h2>
+          <div class="flex aspect-square w-full items-center justify-center rounded-lg bg-bg-inset">
+            <PoutineSprite
+              :slug="poutine.slug"
+              class="size-24"
+              :class="{ 'brightness-0 opacity-30': !isOwned(poutine) }"
+            />
+          </div>
+        </div>
 
-          <span
-            class="mt-auto px-2 py-1 text-xs rounded-full"
-            :class="getRarityClasses(displayRarity(poutine))"
-          >
-            {{ displayRarity(poutine) }}
-          </span>
-        </article>
-      </section>
-    </div>
+        <h2
+          class="font-pixel mb-2 text-center"
+          :class="isOwned(poutine) ? 'text-fg-default' : 'text-fg-muted'"
+        >
+          {{ displayName(poutine) }}
+        </h2>
+
+        <span
+          class="mt-auto px-2 py-1 text-xs rounded-full"
+          :class="getRarityClasses(displayRarity(poutine))"
+        >
+          {{ displayRarity(poutine) }}
+        </span>
+      </article>
+    </section>
   </div>
 </template>
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
+import PoutineSprite from '../components/PoutineSprite.vue';
 import poutines from '../mock/poutines.js';
 
 export default {
   components: {
     AppTopbar,
+    PoutineSprite,
   },
   data() {
     return {
-      poutines: poutines,
+      poutines,
     };
   },
   computed: {
@@ -107,7 +100,6 @@ export default {
     },
     getCardClasses(poutine) {
       if (!this.isOwned(poutine)) return 'bg-bg-muted border-dashed border-border-muted';
-      if (poutine.rarity === 'legendary') return 'bg-bg-default border-border-accent';
       return 'bg-bg-default border-border-muted';
     },
     getRarityClasses(rarity) {

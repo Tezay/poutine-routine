@@ -65,6 +65,20 @@ Run `lint` and `format` before opening a pull request, the CI workflow
 (`.github/workflows/client-ci.yml`) runs `format:check`, `lint` and `build` on every pull request
 that touches `client/`, and fails the check if any of them fail.
 
+## Deployment
+
+Every push to `main` deploys the client to GitHub Pages (`.github/workflows/deploy-pages.yml`). The
+site only has the frontend, with mock data.
+
+To test the Pages build locally:
+
+```bash
+npm run build -- --base=/poutine-routine/
+npm run preview -- --base=/poutine-routine/
+```
+
+Then open `http://localhost:4173/poutine-routine/`.
+
 ## Project structure
 
 ```

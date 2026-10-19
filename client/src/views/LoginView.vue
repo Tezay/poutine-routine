@@ -1,5 +1,10 @@
 <script>
+import MascotSprite from '../components/MascotSprite.vue';
+
 export default {
+  components: {
+    MascotSprite,
+  },
   data() {
     return {
       email: '',
@@ -25,15 +30,10 @@ export default {
 <template>
   <form
     novalidate
-    class="mx-auto mt-8 flex max-w-md flex-col gap-4 rounded-xl border border-border-muted bg-bg-default p-8"
+    class="flex w-full max-w-md flex-col gap-4 rounded-xl border border-border-muted bg-bg-default p-8"
     @submit.prevent="onSubmit"
   >
-    <div
-      aria-hidden="true"
-      class="mx-auto flex h-28 w-28 items-center justify-center rounded-xl border-2 border-dashed border-border-default bg-bg-muted text-sm text-fg-muted"
-    >
-      mascot
-    </div>
+    <MascotSprite class="mx-auto size-24" />
 
     <div class="text-center">
       <h1 class="text-2xl font-bold text-fg-default">Welcome back</h1>

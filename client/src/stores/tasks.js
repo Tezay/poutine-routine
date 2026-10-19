@@ -55,8 +55,7 @@ export const useTasksStore = defineStore('tasks', {
         updated_at: now,
         tags: newTask.tags,
       });
-      const columnSize = this.tasks.filter((task) => task.status === newTask.status).length;
-      this.moveTask(id, newTask.status, columnSize);
+      this.moveTask(id, newTask.status);
     },
     // Status changes go through moveTask, which keeps completed_at and positions in sync.
     updateTask(id, changes) {
@@ -66,7 +65,8 @@ export const useTasksStore = defineStore('tasks', {
     deleteTask(id) {
       this.tasks = this.tasks.filter((task) => task.id !== id);
     },
-    moveTask(id, status, position) {
+    // Puts the task at the end of the column.
+    moveTask(id, status) {
       const now = new Date().toISOString();
       const movedTask = this.tasks.find((task) => task.id === id);
       if (movedTask.status !== status) {
@@ -78,10 +78,7 @@ export const useTasksStore = defineStore('tasks', {
       const column = this.tasks
         .filter((task) => task.status === status && task.id !== id)
         .sort((a, b) => a.position - b.position);
-      column.splice(position, 0, movedTask);
-      column.forEach((task, index) => {
-        task.position = index;
-      });
+      movedTask.position = column.length ? column[column.length - 1].position + 1 : 0;
     },
   },
 });
