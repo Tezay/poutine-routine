@@ -32,9 +32,9 @@
       class="w-full rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
       @click="showBoxModal = true"
     >
-      Open a box · 50 🍟
+      Open a box · {{ boxCost }} 🍟
     </button>
-    <BoxOpeningModal v-if="showBoxModal" @close="showBoxModal = false" />
+    <BoxOpeningModal v-if="showBoxModal" :box-cost="boxCost" @close="showBoxModal = false" />
   </aside>
 </template>
 
@@ -53,6 +53,7 @@ export default {
     return {
       user,
       poutines,
+      boxCost: 50,
       showBoxModal: false,
     };
   },

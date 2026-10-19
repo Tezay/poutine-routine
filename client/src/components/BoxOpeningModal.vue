@@ -17,8 +17,8 @@
           {{ poutine.rarity }}
         </span>
 
-        <div class="flex aspect-square w-40 items-center justify-center rounded-lg bg-bg-inset">
-          <PoutineSprite :slug="poutine.slug" class="size-32" />
+        <div class="flex aspect-square w-52 items-center justify-center rounded-lg bg-bg-inset">
+          <PoutineSprite :slug="poutine.slug" class="size-48" />
         </div>
 
         <h2 id="box-opening-title" class="font-pixel text-xl">{{ poutine.name }}</h2>
@@ -60,8 +60,6 @@ import PoutineSprite from './PoutineSprite.vue';
 import poutines from '../mock/poutines.js';
 import user from '../mock/user.js';
 
-const BOX_COST = 50;
-
 function pickRandomPoutine() {
   const index = Math.floor(Math.random() * poutines.length);
   return poutines[index];
@@ -71,11 +69,13 @@ export default {
   components: {
     PoutineSprite,
   },
+  props: {
+    boxCost: { type: Number, required: true },
+  },
   emits: ['close'],
   data() {
     return {
       user,
-      boxCost: BOX_COST,
       poutine: pickRandomPoutine(),
     };
   },
