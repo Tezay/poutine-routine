@@ -83,5 +83,12 @@ export const useTasksStore = defineStore('tasks', {
         .sort((a, b) => a.position - b.position);
       movedTask.position = column.length ? column[column.length - 1].position + 1 : 0;
     },
+    toggleTag(id) {
+      if (this.activeTagIds.includes(id)) {
+        this.activeTagIds = this.activeTagIds.filter((tagId) => tagId !== id);
+      } else {
+        this.activeTagIds.push(id);
+      }
+    },
   },
 });

@@ -5,7 +5,7 @@
     v-if="sortedTasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
-    <h2 class="mt-6 text-xl font-semibold">No matching tasks</h2>
+    <h2 class="text-xl font-semibold">No matching tasks</h2>
     <p class="mt-2 text-fg-muted">Try clearing your search or selecting a different tag.</p>
   </div>
 
@@ -77,11 +77,16 @@
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
 import { useTasksStore } from '../stores/tasks.js';
-import { mapState } from 'pinia';
 
 export default {
   components: {
     AppTopbar,
+  },
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
   },
   data() {
     return {
@@ -97,9 +102,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(useTasksStore, ['visibleTasks']),
     sortedTasks() {
-      return [...this.visibleTasks].sort((a, b) => {
+      return [...this.tasksStore.visibleTasks].sort((a, b) => {
         let valA = a[this.sortKey];
         let valB = b[this.sortKey];
 

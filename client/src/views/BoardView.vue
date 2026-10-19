@@ -2,7 +2,7 @@
   <AppTopbar title="My board" action-label="New task" @action="openCreateTaskModal" />
 
   <div
-    v-if="tasks.length === 0"
+    v-if="tasksStore.tasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
     <MascotSprite class="size-48" />
@@ -20,10 +20,10 @@
   </div>
 
   <div
-    v-else-if="visibleTasks.length === 0"
+    v-else-if="tasksStore.visibleTasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
-    <h2 class="mt-6 text-xl font-semibold">No matching tasks</h2>
+    <h2 class="text-xl font-semibold">No matching tasks</h2>
     <p class="mt-2 text-fg-muted">Try clearing your search or selecting a different tag.</p>
   </div>
 
@@ -33,7 +33,7 @@
       :key="column.status"
       :title="column.label"
       :dot-class="column.dotClass"
-      :tasks="tasksByStatus(column.status)"
+      :tasks="tasksStore.tasksByStatus(column.status)"
       @select="openEditTaskModal"
       @drop-task="moveDroppedTask($event, column.status)"
     />
@@ -42,7 +42,7 @@
   <TaskModal
     v-if="isModalOpen"
     :task="editedTask"
-    :tags="tags"
+    :tags="tasksStore.tags"
     @close="closeModal"
     @save="saveTask"
     @delete="deleteEditedTask"
@@ -55,7 +55,6 @@ import MascotSprite from '../components/MascotSprite.vue';
 import TaskColumn from '../components/TaskColumn.vue';
 import TaskModal from '../components/TaskModal.vue';
 import { useTasksStore } from '../stores/tasks.js';
-import { mapState, mapActions } from 'pinia';
 
 export default {
   components: {
@@ -63,6 +62,12 @@ export default {
     MascotSprite,
     TaskColumn,
     TaskModal,
+  },
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
   },
   data() {
     return {
@@ -76,12 +81,7 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapState(useTasksStore, ['tasks', 'visibleTasks', 'tasksByStatus', 'tags']),
-  },
   methods: {
-    ...mapActions(useTasksStore, ['addTask', 'updateTask', 'moveTask', 'deleteTask']),
-
     openCreateTaskModal() {
       this.openerElement = document.activeElement;
       this.editedTask = null;
@@ -101,7 +101,7 @@ export default {
     },
     saveTask(fields) {
       if (this.editedTask === null) {
-        this.addTask(fields);
+        this.tasksStore.addTask(fields);
       } else {
         this.updateEditedTask(fields);
       }
@@ -109,7 +109,7 @@ export default {
     },
     updateEditedTask(fields) {
       const id = this.editedTask.id;
-      this.updateTask(id, {
+      this.tasksStore.updateTask(id, {
         title: fields.title,
         description: fields.description,
         priority: fields.priority,
@@ -117,17 +117,17 @@ export default {
         tags: fields.tags,
       });
       if (fields.status !== this.editedTask.status) {
-        this.moveTask(id, fields.status);
+        this.tasksStore.moveTask(id, fields.status);
       }
     },
     moveDroppedTask(taskId, status) {
-      const droppedTask = this.tasks.find((task) => task.id === taskId);
+      const droppedTask = this.tasksStore.tasks.find((task) => task.id === taskId);
       if (droppedTask && droppedTask.status !== status) {
-        this.moveTask(taskId, status);
+        this.tasksStore.moveTask(taskId, status);
       }
     },
     deleteEditedTask() {
-      this.deleteTask(this.editedTask.id);
+      this.tasksStore.deleteTask(this.editedTask.id);
       this.closeModal();
     },
   },

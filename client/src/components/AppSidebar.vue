@@ -2,7 +2,7 @@
   <aside class="flex flex-col gap-6 border-r border-border-default bg-bg-muted p-4">
     <div class="flex items-center gap-2">
       <img src="../assets/logo.svg" alt="" class="size-8" />
-      <span class="font-pixel text-xl font-semibold">Poutine Routine</span>
+      <span class="font-pixel font-semibold text-xl">Poutine Routine</span>
     </div>
 
     <nav class="flex flex-col gap-0.5" aria-label="Main">
@@ -20,16 +20,18 @@
     <section>
       <h2 class="px-2 pb-1 text-xs font-semibold uppercase text-fg-muted">Tags</h2>
       <ul class="flex flex-col gap-0.5">
-        <li
-          v-for="tag in tags"
-          :key="tag.id"
-          class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 hover:bg-bg-neutral-muted"
-          :class="{ 'bg-bg-neutral-muted font-semibold': activeTagIds.includes(tag.id) }"
-          @click="toggleTag(tag.id, $event)"
-        >
-          <span class="size-2 rounded-full" :style="{ backgroundColor: tag.color }"></span>
-          <span>{{ tag.name }}</span>
-          <span class="ml-auto text-xs text-fg-muted">{{ getTagCount(tag.id) }}</span>
+        <li v-for="tag in tasksStore.tags" :key="tag.id">
+          <button
+            type="button"
+            :aria-pressed="isActive(tag.id)"
+            class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-bg-neutral-muted"
+            :class="{ 'bg-bg-neutral-muted font-semibold': isActive(tag.id) }"
+            @click="tasksStore.toggleTag(tag.id)"
+          >
+            <span class="size-2 rounded-full" :style="{ backgroundColor: tag.color }"></span>
+            <span>{{ tag.name }}</span>
+            <span class="ml-auto text-xs text-fg-muted">{{ taskCount(tag.id) }}</span>
+          </button>
         </li>
       </ul>
     </section>
@@ -37,14 +39,17 @@
 </template>
 
 <script>
-import { mapState, mapWritableState } from 'pinia';
 import { useTasksStore } from '../stores/tasks.js';
-import tags from '../mock/tags.js';
 
 export default {
+  setup() {
+    const tasksStore = useTasksStore();
+    return {
+      tasksStore,
+    };
+  },
   data() {
     return {
-      tags,
       links: [
         { label: 'Board', to: '/' },
         { label: 'Table', to: '/table' },
@@ -53,31 +58,13 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapState(useTasksStore, ['tasks']),
-    ...mapWritableState(useTasksStore, ['activeTagIds']),
-  },
   methods: {
-    getTagCount(id) {
-      return this.tasks.filter((task) => task.tags.some((tag) => tag.id === id)).length;
+    isActive(tagId) {
+      return this.tasksStore.activeTagIds.includes(tagId);
     },
-    toggleTag(id, event) {
-      const isMultiSelect = event.ctrlKey || event.metaKey;
-
-      if (isMultiSelect) {
-        const index = this.activeTagIds.indexOf(id);
-        if (index === -1) {
-          this.activeTagIds.push(id);
-        } else {
-          this.activeTagIds.splice(index, 1);
-        }
-      } else {
-        if (this.activeTagIds.length === 1 && this.activeTagIds[0] === id) {
-          this.activeTagIds = [];
-        } else {
-          this.activeTagIds = [id];
-        }
-      }
+    taskCount(tagId) {
+      return this.tasksStore.tasks.filter((task) => task.tags.some((tag) => tag.id === tagId))
+        .length;
     },
   },
 };
