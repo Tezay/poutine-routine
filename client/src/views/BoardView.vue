@@ -24,9 +24,7 @@
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
     <h2 class="mt-6 text-xl font-semibold">No matching tasks</h2>
-    <p class="mt-2 text-fg-muted">
-      Try clearing your search or selecting a different tag.
-    </p>
+    <p class="mt-2 text-fg-muted">Try clearing your search or selecting a different tag.</p>
   </div>
 
   <div v-else class="grid grid-cols-3 items-start gap-4 p-6">
@@ -44,7 +42,7 @@
   <TaskModal
     v-if="isModalOpen"
     :task="editedTask"
-    :tags="tasksStore.tags"
+    :tags="tags"
     @close="closeModal"
     @save="saveTask"
     @delete="deleteEditedTask"
@@ -57,7 +55,7 @@ import MascotSprite from '../components/MascotSprite.vue';
 import TaskColumn from '../components/TaskColumn.vue';
 import TaskModal from '../components/TaskModal.vue';
 import { useTasksStore } from '../stores/tasks.js';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 export default {
   components: {
@@ -65,9 +63,6 @@ export default {
     MascotSprite,
     TaskColumn,
     TaskModal,
-  },
-  computed: {
-    ...mapState(useTasksStore, ['tasks', 'visibleTasks', 'tasksByStatus']),
   },
   data() {
     return {
@@ -81,7 +76,12 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState(useTasksStore, ['tasks', 'visibleTasks', 'tasksByStatus', 'tags']),
+  },
   methods: {
+    ...mapActions(useTasksStore, ['addTask', 'updateTask', 'moveTask', 'deleteTask']),
+
     openCreateTaskModal() {
       this.openerElement = document.activeElement;
       this.editedTask = null;
@@ -101,7 +101,7 @@ export default {
     },
     saveTask(fields) {
       if (this.editedTask === null) {
-        this.tasksStore.addTask(fields);
+        this.addTask(fields);
       } else {
         this.updateEditedTask(fields);
       }
@@ -109,7 +109,7 @@ export default {
     },
     updateEditedTask(fields) {
       const id = this.editedTask.id;
-      this.tasksStore.updateTask(id, {
+      this.updateTask(id, {
         title: fields.title,
         description: fields.description,
         priority: fields.priority,
@@ -117,17 +117,17 @@ export default {
         tags: fields.tags,
       });
       if (fields.status !== this.editedTask.status) {
-        this.tasksStore.moveTask(id, fields.status);
+        this.moveTask(id, fields.status);
       }
     },
     moveDroppedTask(taskId, status) {
-      const droppedTask = this.tasksStore.tasks.find((task) => task.id === taskId);
+      const droppedTask = this.tasks.find((task) => task.id === taskId);
       if (droppedTask && droppedTask.status !== status) {
-        this.tasksStore.moveTask(taskId, status);
+        this.moveTask(taskId, status);
       }
     },
     deleteEditedTask() {
-      this.tasksStore.deleteTask(this.editedTask.id);
+      this.deleteTask(this.editedTask.id);
       this.closeModal();
     },
   },
