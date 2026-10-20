@@ -22,11 +22,12 @@ No LaTeX, no Node, no browser involved.
 ## Build
 
 ```bash
-cd docs/milestone-1
-pandoc *.md -o "Poutine-Routine-Milestone-1.pdf" --pdf-engine=typst -H style.typ
+cd docs/milestone-2
+pandoc *.md -o "Poutine-Routine-Milestone-2.pdf" --pdf-engine=typst -H style.typ
 ```
 
-Sections are picked up in alphabetical order, which is why the files are numbered `00-` to `07-`.
+The same command builds Milestone 1 from `docs/milestone-1`, with `Poutine-Routine-Milestone-1.pdf`.
+Sections are picked up in alphabetical order, which is why the files are numbered `00-` to `08-`.
 The cover page and the table of contents are written as Typst blocks at the top of `00-cover.md`;
 `style.typ` holds the page setup, the text size and the table style.
 
@@ -38,8 +39,9 @@ they resolve both in the PDF and in the GitHub preview.
 ```
 docs/
 ├── milestone-1/       one Markdown file per section, plus the built PDF
+├── milestone-2/       same layout, for Milestone 2
 ├── database/          schema.dbml - the written source of the ERD
-└── assets/            diagrams (SVG) and exported mockups (PNG)
+└── assets/            diagrams (SVG), exported mockups (PNG), screenshots of the application
 ```
 
 The ERD image is exported from [vscode-dbml](https://github.com/mattmeyers/vscode-dbml) extension with `database/schema.dbml`; the mockups are exported from the Figma file.
