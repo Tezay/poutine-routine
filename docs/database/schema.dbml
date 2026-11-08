@@ -92,7 +92,7 @@ Table poutines {
   id int [pk, increment]
   slug varchar(40) [not null, unique]
   name varchar(60) [not null]
-  lore varchar(160) [null, note: 'one line of flavour text']
+  lore varchar(300) [null, note: 'short flavour text']
   rarity rarity [not null, default: 'common']
   sprite varchar(80) [not null, note: 'asset folder; optional layers resolved client-side']
   effect varchar(40) [null, note: 'key of the optional front-end behaviour']
