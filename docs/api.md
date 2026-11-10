@@ -26,7 +26,7 @@ route has to change, change this page in the same pull request.
 | 429 | Too many requests (login and register) |
 | 500 | Server error, without details |
 
-All routes need the session except `POST /user` and `POST /user/login`.
+All routes need the session except `POST /user`, `POST /user/login` and `POST /user/logout`.
 
 ## User and session
 

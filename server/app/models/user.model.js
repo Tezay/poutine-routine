@@ -43,7 +43,10 @@ module.exports = (connex, Sequelize) => {
         type: Sequelize.DATEONLY,
       },
     },
-    { timestamps: true },
+    {
+      timestamps: true,
+      defaultScope: { attributes: { exclude: ['password_hash'] } },
+    },
   );
 
   return User;

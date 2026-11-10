@@ -7,7 +7,7 @@ const connex = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   // Dates are stored in UTC
   timezone: '+00:00',
   logging: false,
-  define: { underscored: true },
+  define: { underscored: true, createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
 const db = {};
