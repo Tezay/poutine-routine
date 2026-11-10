@@ -26,8 +26,8 @@ The sidebar icons come from [Lucide](https://lucide.dev) (ISC license). The SVG 
 ## Prerequisites
 
 - **Node.js 20 or later** and npm. Check your version with `node --version`.
-- A running backend. Every page except login and register needs a session, so without the API
-  you are sent to `/login`. See `../server` to start it (`docker compose up -d`, then `npm start`).
+- A running backend. Every page except login and register needs a session, so without the API you
+  are sent to `/login`. See `../server` to start it (`docker compose up -d`, then `npm start`).
 
 ## Getting started
 
