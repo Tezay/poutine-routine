@@ -74,6 +74,28 @@ A new account starts with 0 fries and the starter poutine as companion.
 | `PUT /tasks/:id/move` | `status` (`todo`, `doing` or `done`) | 200, `{ task, fries_earned, fries_balance }` |
 | `DELETE /tasks/:id` | none | 200 |
 
+A task, as returned by the server (`user_id` is never sent):
+
+```json
+{
+  "id": 1,
+  "title": "Watch Godzilla",
+  "description": null,
+  "status": "todo",
+  "priority": "high",
+  "position": 0,
+  "due_at": "2026-11-12T18:00:00.000Z",
+  "completed_at": null,
+  "rewarded_at": null,
+  "created_at": "2026-11-09T10:00:00.000Z",
+  "updated_at": "2026-11-09T10:00:00.000Z",
+  "tags": [{ "id": 1, "name": "School", "color": "#0969da", "created_at": "2026-11-09T09:00:00.000Z" }]
+}
+```
+
+The client never sends `position`. A new task and a moved task go at the end of their column.
+`PUT /tasks/:id` replaces the tags with `tag_ids`. `GET /tasks` answers every task of the user.
+
 ## Tags
 
 | Method and path | Body | Answer |
