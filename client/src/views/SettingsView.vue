@@ -93,6 +93,7 @@
         <button
           type="button"
           class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover"
+          @click="signOut"
         >
           Sign out
         </button>
@@ -119,11 +120,18 @@ import AppTopbar from '../components/AppTopbar.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
 import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
+import { useAuthStore } from '../stores/auth.js';
 
 export default {
   components: {
     AppTopbar,
     PoutineSprite,
+  },
+  setup() {
+    const authStore = useAuthStore();
+    return {
+      authStore,
+    };
   },
   data() {
     return {
@@ -135,6 +143,12 @@ export default {
       password: '',
       ownedPoutines: poutines.filter((poutine) => poutine.quantity > 0),
     };
+  },
+  methods: {
+    async signOut() {
+      await this.authStore.logout();
+      this.$router.push('/login');
+    },
   },
 };
 </script>
