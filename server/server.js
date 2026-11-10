@@ -22,9 +22,25 @@ app.get('/', (req, res) => {
 const dbConfig = require('./app/config/db.config');
 const db = require('./app/models');
 
+require('./app/routes/user.route')(app);
+
+app.use((req, res) => {
+  res.status(404).send({ message: 'Not found.' });
+});
+
+app.use((err, req, res, _next) => {
+  const status = err.status >= 400 && err.status < 500 ? err.status : 500;
+  if (status === 500) console.error(err);
+  res.status(status).send({ message: status === 500 ? 'Server error.' : 'Invalid request.' });
+});
+
 const PORT = process.env.PORT;
 
 const start = async () => {
+  if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET is missing. Add it to .env (see .env.example).');
+    process.exit(1);
+  }
   try {
     await db.connex.sync();
   } catch (err) {
