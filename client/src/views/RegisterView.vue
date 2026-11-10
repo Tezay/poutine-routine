@@ -41,9 +41,11 @@
         />
         <p id="password-hint" class="mt-1 text-sm text-fg-muted">At least 8 characters.</p>
       </div>
+      <p v-if="serverError" role="alert" class="mb-5 text-sm text-fg-danger">{{ serverError }}</p>
       <button
         type="submit"
-        class="w-full cursor-pointer rounded-md bg-bg-primary-emphasis px-4 py-3 font-semibold text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+        :disabled="isSubmitting"
+        class="w-full cursor-pointer rounded-md bg-bg-primary-emphasis px-4 py-3 font-semibold text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover disabled:opacity-60"
       >
         Create account
       </button>
@@ -60,6 +62,7 @@
 
 <script>
 import MascotSprite from '../components/MascotSprite.vue';
+import UserDataService from '../services/UserDataService.js';
 
 export default {
   components: {
@@ -72,11 +75,22 @@ export default {
         email: '',
         password: '',
       },
+      serverError: '',
+      isSubmitting: false,
     };
   },
   methods: {
-    handleSubmit() {
-      console.log({ username: this.form.username, email: this.form.email });
+    async handleSubmit() {
+      this.serverError = '';
+      this.isSubmitting = true;
+      try {
+        await UserDataService.create(this.form);
+        this.$router.push('/login');
+      } catch (error) {
+        this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
+      } finally {
+        this.isSubmitting = false;
+      }
     },
   },
 };
