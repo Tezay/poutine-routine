@@ -1,9 +1,16 @@
 <script>
 import MascotSprite from '../components/MascotSprite.vue';
+import { useAuthStore } from '../stores/auth.js';
 
 export default {
   components: {
     MascotSprite,
+  },
+  setup() {
+    const authStore = useAuthStore();
+    return {
+      authStore,
+    };
   },
   data() {
     return {
@@ -11,17 +18,29 @@ export default {
       password: '',
       emailError: '',
       passwordError: '',
+      serverError: '',
+      isSubmitting: false,
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.emailError = this.email.trim() === '' ? 'Email is required.' : '';
       this.passwordError = this.password === '' ? 'Password is required.' : '';
 
       if (this.emailError !== '' || this.passwordError !== '') {
         return;
       }
-      console.log(this.email);
+
+      this.serverError = '';
+      this.isSubmitting = true;
+      try {
+        await this.authStore.login({ email: this.email, password: this.password });
+        this.$router.push('/');
+      } catch (error) {
+        this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
+      } finally {
+        this.isSubmitting = false;
+      }
     },
   },
 };
@@ -63,9 +82,12 @@ export default {
       <p v-if="passwordError" role="alert" class="text-sm text-fg-danger">{{ passwordError }}</p>
     </div>
 
+    <p v-if="serverError" role="alert" class="text-sm text-fg-danger">{{ serverError }}</p>
+
     <button
       type="submit"
-      class="rounded-md bg-bg-primary-emphasis px-4 py-3 text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+      :disabled="isSubmitting"
+      class="rounded-md bg-bg-primary-emphasis px-4 py-3 text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover disabled:opacity-60"
     >
       Sign in
     </button>
