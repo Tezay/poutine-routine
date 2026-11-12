@@ -27,11 +27,11 @@
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.14.0",
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",
-    "nodemon": "^3.1.14",
+    "nodemon": "^3.1.11",
     "prettier": "^3.9.10"
   }
 }
