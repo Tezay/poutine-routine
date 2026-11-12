@@ -13,6 +13,12 @@ class UserDataService {
   auth() {
     return http.get('/user/auth');
   }
+  update(data) {
+    return http.put('/user', data);
+  }
+  delete() {
+    return http.delete('/user');
+  }
 }
 
 export default new UserDataService();

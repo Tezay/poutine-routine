@@ -1,5 +1,5 @@
 <template>
-  <AppTopbar title="Settings" action-label="Save changes" />
+  <AppTopbar title="Settings" action-label="Save changes" @action="updateAccount" />
 
   <div class="flex max-w-2xl flex-col gap-5 p-6">
     <section class="rounded-xl border border-border-default bg-bg-default p-5">
@@ -83,10 +83,14 @@
       <p id="password-hint" class="mb-3 mt-1 text-xs text-fg-muted">
         Changing your password signs you out everywhere.
       </p>
+      <p v-if="serverError" role="alert" class="mb-3 text-sm text-fg-danger">{{ serverError }}</p>
+      <p v-if="isSaved" role="status" class="mb-3 text-sm text-fg-success">Changes saved.</p>
       <div class="flex gap-2">
         <button
           type="button"
-          class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover"
+          :disabled="isSubmitting"
+          class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover disabled:opacity-60"
+          @click="updateAccount"
         >
           Update account
         </button>
@@ -108,6 +112,7 @@
       <button
         type="button"
         class="cursor-pointer rounded-md border border-border-danger px-3 py-1.5 text-fg-danger hover:bg-bg-danger-muted"
+        @click="deleteAccount"
       >
         Delete my account
       </button>
@@ -118,8 +123,8 @@
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
-import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
+import UserDataService from '../services/UserDataService.js';
 import { useAuthStore } from '../stores/auth.js';
 
 export default {
@@ -134,20 +139,65 @@ export default {
     };
   },
   data() {
+    const user = this.authStore.user;
     return {
-      user,
       goalReward: 20,
       dailyGoal: user.daily_goal,
       companionId: user.companion_poutine_id,
       email: user.email,
       password: '',
       ownedPoutines: poutines.filter((poutine) => poutine.quantity > 0),
+      serverError: '',
+      isSubmitting: false,
+      isSaved: false,
     };
   },
+  computed: {
+    user() {
+      return this.authStore.user ?? {};
+    },
+  },
   methods: {
+    async updateAccount() {
+      this.serverError = '';
+      this.isSubmitting = true;
+      this.isSaved = false;
+
+      const data = {
+        email: this.email,
+        daily_goal: this.dailyGoal,
+      };
+      if (this.password !== '') {
+        data.password = this.password;
+      }
+
+      try {
+        const response = await UserDataService.update(data);
+        this.authStore.setUser(response.data);
+        this.password = '';
+        this.isSaved = true;
+      } catch (error) {
+        this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
     async signOut() {
       await this.authStore.logout();
       this.$router.push('/login');
+    },
+    async deleteAccount() {
+      if (!window.confirm('Delete your account? This cannot be undone.')) {
+        return;
+      }
+      this.serverError = '';
+      try {
+        await UserDataService.delete();
+        this.authStore.setUser(null);
+        this.$router.push('/login');
+      } catch (error) {
+        this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
+      }
     },
   },
 };
