@@ -2,6 +2,9 @@
   <AppTopbar title="Settings" action-label="Save changes" @action="updateAccount" />
 
   <div class="flex max-w-2xl flex-col gap-5 p-6">
+    <p v-if="serverError" role="alert" class="text-sm text-fg-danger">{{ serverError }}</p>
+    <p v-if="isSaved" role="status" class="text-sm text-fg-success">Changes saved.</p>
+
     <section class="rounded-xl border border-border-default bg-bg-default p-5">
       <h2 class="mb-3 text-base font-semibold">Daily goal</h2>
       <div class="flex items-center gap-3">
@@ -81,27 +84,15 @@
         class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2"
       />
       <p id="password-hint" class="mb-3 mt-1 text-xs text-fg-muted">
-        Changing your password signs you out everywhere.
+        Leave it empty to keep your current password.
       </p>
-      <p v-if="serverError" role="alert" class="mb-3 text-sm text-fg-danger">{{ serverError }}</p>
-      <p v-if="isSaved" role="status" class="mb-3 text-sm text-fg-success">Changes saved.</p>
-      <div class="flex gap-2">
-        <button
-          type="button"
-          :disabled="isSubmitting"
-          class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover disabled:opacity-60"
-          @click="updateAccount"
-        >
-          Update account
-        </button>
-        <button
-          type="button"
-          class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover"
-          @click="signOut"
-        >
-          Sign out
-        </button>
-      </div>
+      <button
+        type="button"
+        class="cursor-pointer rounded-md border border-border-default bg-bg-muted px-3 py-1.5 hover:bg-bg-muted-hover"
+        @click="signOut"
+      >
+        Sign out
+      </button>
     </section>
 
     <section class="rounded-xl border border-border-danger bg-bg-default p-5">
@@ -148,7 +139,6 @@ export default {
       password: '',
       ownedPoutines: poutines.filter((poutine) => poutine.quantity > 0),
       serverError: '',
-      isSubmitting: false,
       isSaved: false,
     };
   },
@@ -160,7 +150,6 @@ export default {
   methods: {
     async updateAccount() {
       this.serverError = '';
-      this.isSubmitting = true;
       this.isSaved = false;
 
       const data = {
@@ -178,8 +167,6 @@ export default {
         this.isSaved = true;
       } catch (error) {
         this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
-      } finally {
-        this.isSubmitting = false;
       }
     },
     async signOut() {
