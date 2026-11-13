@@ -24,6 +24,7 @@ const db = require('./app/models');
 
 require('./app/routes/user.route')(app);
 require('./app/routes/tag.route.js')(app);
+require('./app/routes/task.route.js')(app);
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Not found.' });
