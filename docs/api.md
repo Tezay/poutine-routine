@@ -101,11 +101,11 @@ The client never sends `position`. A new task and a moved task go at the end of 
 | Method and path | Body | Answer |
 |:------------------------|:-------------------------------|:-------------------|
 | `GET /tags` | none | 200, the list |
-| `POST /tags` | `name` (30 characters at most), `color` (`#rrggbb`) | 201, the tag |
+| `POST /tags` | `name` (30 characters at most), `color` (`#rrggbb`,optional, `#0969da` if missing) | 201, the tag |
 | `PUT /tags/:id` | `name`, `color` (optional) | 200, the tag |
 | `DELETE /tags/:id` | none | 200, the tag is removed from its tasks |
 
-A tag is `{ id, name, color, created_at }`. Two tags of the same user cannot have the same name.
+A tag is `{ id, name, color, created_at }`. Two tags of the same user cannot have the same name, even with another case.
 
 ## Poutines and boxes
 
