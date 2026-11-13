@@ -77,3 +77,48 @@ exports.logout = (req, res) => {
   res.clearCookie(authConfig.COOKIE_NAME, authConfig.COOKIE_OPTIONS);
   res.send({ message: 'Logged out.' });
 };
+
+exports.update = async (req, res) => {
+  const { email, password, daily_goal } = req.body;
+  const updates = {};
+
+  if (email !== undefined) {
+    if (typeof email !== 'string') {
+      return res.status(400).send({ message: 'Invalid email.' });
+    }
+    updates.email = email;
+  }
+
+  if (password !== undefined) {
+    if (typeof password !== 'string' || password.length < 8 || password.length > 72) {
+      return res.status(400).send({ message: 'Password must have 8 to 72 characters.' });
+    }
+    updates.password_hash = await bcrypt.hash(password, 10);
+  }
+
+  if (daily_goal !== undefined) {
+    if (!Number.isInteger(daily_goal) || daily_goal < 1 || daily_goal > 127) {
+      return res.status(400).send({ message: 'Daily goal must be between 1 and 127.' });
+    }
+    updates.daily_goal = daily_goal;
+  }
+
+  try {
+    await req.user.update(updates);
+    res.send(await User.findByPk(req.user.id));
+  } catch (err) {
+    if (err instanceof db.Sequelize.UniqueConstraintError) {
+      return res.status(409).send({ message: 'Email already used.' });
+    }
+    if (err instanceof db.Sequelize.ValidationError) {
+      return res.status(400).send({ message: 'Invalid email.' });
+    }
+    throw err;
+  }
+};
+
+exports.delete = async (req, res) => {
+  await req.user.destroy();
+  res.clearCookie(authConfig.COOKIE_NAME, authConfig.COOKIE_OPTIONS);
+  res.send({ message: 'Account deleted.' });
+};
