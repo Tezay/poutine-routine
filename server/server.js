@@ -3,17 +3,26 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const app = express();
 
 const corsOptions = {
   origin: process.env.CLIENT_ORIGIN,
   credentials: true,
 };
+app.use(helmet());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
+// body-parser leaves req.body undefined when a request has no body.
+app.use((req, res, next) => {
+  if (!req.body) {
+    req.body = {};
+  }
+  next();
+});
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Poutine Routine' });

@@ -14,14 +14,6 @@ const FAKE_HASH = bcrypt.hashSync('not-a-real-password', 10);
 
 exports.create = async (req, res) => {
   const { username, email, password } = req.body;
-  if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
-    return res.status(400).send({ message: 'Username, email and password are required.' });
-  }
-  // bcrypt ignores everything after 72 bytes.
-  if (password.length < 8 || password.length > 72) {
-    return res.status(400).send({ message: 'Password must have 8 to 72 characters.' });
-  }
-
   const passwordHash = await bcrypt.hash(password, 10);
 
   try {
@@ -42,19 +34,12 @@ exports.create = async (req, res) => {
     if (err instanceof db.Sequelize.UniqueConstraintError) {
       return res.status(409).send({ message: 'Email or username already used.' });
     }
-    if (err instanceof db.Sequelize.ValidationError) {
-      return res.status(400).send({ message: 'Invalid email.' });
-    }
     throw err;
   }
 };
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  if (typeof email !== 'string' || typeof password !== 'string') {
-    return res.status(400).send({ message: 'Email and password are required.' });
-  }
-
   const user = await User.unscoped().findOne({ where: { email } });
   const isValid = await bcrypt.compare(password, user ? user.password_hash : FAKE_HASH);
   if (!user || !isValid) {
@@ -81,25 +66,13 @@ exports.logout = (req, res) => {
 exports.update = async (req, res) => {
   const { email, password, daily_goal } = req.body;
   const updates = {};
-
   if (email !== undefined) {
-    if (typeof email !== 'string') {
-      return res.status(400).send({ message: 'Invalid email.' });
-    }
     updates.email = email;
   }
-
   if (password !== undefined) {
-    if (typeof password !== 'string' || password.length < 8 || password.length > 72) {
-      return res.status(400).send({ message: 'Password must have 8 to 72 characters.' });
-    }
     updates.password_hash = await bcrypt.hash(password, 10);
   }
-
   if (daily_goal !== undefined) {
-    if (!Number.isInteger(daily_goal) || daily_goal < 1 || daily_goal > 127) {
-      return res.status(400).send({ message: 'Daily goal must be between 1 and 127.' });
-    }
     updates.daily_goal = daily_goal;
   }
 
@@ -109,9 +82,6 @@ exports.update = async (req, res) => {
   } catch (err) {
     if (err instanceof db.Sequelize.UniqueConstraintError) {
       return res.status(409).send({ message: 'Email already used.' });
-    }
-    if (err instanceof db.Sequelize.ValidationError) {
-      return res.status(400).send({ message: 'Invalid email.' });
     }
     throw err;
   }
