@@ -59,6 +59,10 @@ export default {
       ],
     };
   },
+  // The sidebar is on every page once logged in, so it loads the tasks and the tags.
+  mounted() {
+    this.tasksStore.fetchAll();
+  },
   methods: {
     iconUrl(name) {
       return new URL(`../assets/icons/${name}.svg`, import.meta.url).href;

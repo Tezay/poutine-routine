@@ -1,8 +1,13 @@
 <template>
   <AppTopbar title="My board" action-label="New task" @action="openCreateTaskModal" />
 
+  <p v-if="tasksStore.errorMessage" role="alert" class="mx-6 mt-4 text-sm text-fg-danger">
+    {{ tasksStore.errorMessage }}
+  </p>
+  <p v-if="tasksStore.isLoading" class="m-6 text-fg-muted">Loading your tasks...</p>
+
   <div
-    v-if="tasksStore.tasks.length === 0"
+    v-else-if="tasksStore.tasks.length === 0"
     class="m-6 flex flex-col items-center rounded-lg border border-dashed border-border-default bg-bg-muted px-6 py-16 text-center"
   >
     <MascotSprite class="size-48" />
