@@ -23,7 +23,8 @@ route has to change, change this page in the same pull request.
 | 401 | Not logged in, or the cookie is not valid |
 | 404 | Not found. It is also the answer for the data of another user |
 | 409 | Already used (email, username or tag name) |
-| 429 | Too many requests (login and register) |
+| 413 | The body is larger than 10 kB |
+| 429 | Too many failed attempts on login and register (10 in 15 minutes) |
 | 500 | Server error, without details |
 
 All routes need the session except `POST /user`, `POST /user/login` and `POST /user/logout`.
@@ -95,6 +96,7 @@ A task, as returned by the server (`user_id` is never sent):
 
 The client never sends `position`. A new task and a moved task go at the end of their column.
 `PUT /tasks/:id` replaces the tags with `tag_ids`. `GET /tasks` answers every task of the user.
+`completed_at` is set when a task goes to Done, and cleared when it leaves Done.
 
 ## Tags
 
@@ -124,7 +126,7 @@ A tag is `{ id, name, color, created_at }`. Two tags of the same user cannot hav
 
 | Rule | Value |
 |:----------------------------------------|:----------------------------------------|
-| A task moved to Done | 10 fries, once per task (`rewarded_at`) |
+| A task moved to Done with `PUT /tasks/:id/move` | 10 fries, once per task (`rewarded_at`). A task created in Done earns nothing |
 | Done before `due_at` | 5 more fries |
 | A box | 50 fries |
 | Chance of a rarity in a box | common 60, rare 25, epic 12, legendary 3 (in percent) |
