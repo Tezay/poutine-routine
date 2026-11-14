@@ -43,17 +43,18 @@ export default {
         this.openerElement.focus();
       }
     },
-    saveTask(fields) {
+    async saveTask(fields) {
       if (this.editedTask === null) {
-        this.tasksStore.addTask(fields);
+        await this.tasksStore.addTask(fields);
       } else {
-        this.updateEditedTask(fields);
+        await this.updateEditedTask(fields);
       }
       this.closeModal();
     },
-    updateEditedTask(fields) {
+    async updateEditedTask(fields) {
       const id = this.editedTask.id;
-      this.tasksStore.updateTask(id, {
+      // Wait for the update, or its answer could bring back the old status after the move.
+      await this.tasksStore.updateTask(id, {
         title: fields.title,
         description: fields.description,
         priority: fields.priority,
@@ -61,7 +62,7 @@ export default {
         tags: fields.tags,
       });
       if (fields.status !== this.editedTask.status) {
-        this.tasksStore.moveTask(id, fields.status);
+        await this.tasksStore.moveTask(id, fields.status);
       }
     },
     deleteEditedTask() {

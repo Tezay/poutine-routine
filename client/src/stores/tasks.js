@@ -1,14 +1,18 @@
 import { defineStore } from 'pinia';
-import tasks from '../mock/tasks.js';
-import tags from '../mock/tags.js';
+import TaskDataService from '../services/TaskDataService.js';
+import TagDataService from '../services/TagDataService.js';
+
+const messageOf = (error) => error.response?.data?.message ?? 'Cannot reach the server.';
 
 export const useTasksStore = defineStore('tasks', {
   state() {
     return {
-      tasks,
-      tags,
+      tasks: [],
+      tags: [],
       activeTagIds: [],
       searchQuery: '',
+      isLoading: false,
+      errorMessage: '',
     };
   },
   getters: {
@@ -40,48 +44,74 @@ export const useTasksStore = defineStore('tasks', {
     },
   },
   actions: {
-    addTask(newTask) {
-      const now = new Date().toISOString();
-      // Temporary id until the API assigns the real one.
-      const id = Date.now();
-      this.tasks.push({
-        id,
-        title: newTask.title,
-        description: newTask.description,
-        status: newTask.status,
-        priority: newTask.priority,
-        position: 0,
-        due_at: newTask.due_at,
-        completed_at: newTask.status === 'done' ? now : null,
-        rewarded_at: null,
-        created_at: now,
-        updated_at: now,
-        tags: newTask.tags,
-      });
-      this.moveTask(id, newTask.status);
-    },
-    // Status changes go through moveTask, which keeps completed_at and positions in sync.
-    updateTask(id, changes) {
-      const updatedTask = this.tasks.find((task) => task.id === id);
-      Object.assign(updatedTask, changes, { updated_at: new Date().toISOString() });
-    },
-    deleteTask(id) {
-      this.tasks = this.tasks.filter((task) => task.id !== id);
-    },
-    // Puts the task at the end of the column.
-    moveTask(id, status) {
-      const now = new Date().toISOString();
-      const movedTask = this.tasks.find((task) => task.id === id);
-      if (movedTask.status !== status) {
-        movedTask.status = status;
-        movedTask.completed_at = status === 'done' ? now : null;
+    async fetchAll() {
+      this.isLoading = true;
+      this.errorMessage = '';
+      try {
+        const tasksResponse = await TaskDataService.getAll();
+        const tagsResponse = await TagDataService.getAll();
+        this.tasks = tasksResponse.data;
+        this.tags = tagsResponse.data;
+      } catch (error) {
+        this.errorMessage = messageOf(error);
+      } finally {
+        this.isLoading = false;
       }
-      movedTask.updated_at = now;
-
-      const column = this.tasks
-        .filter((task) => task.status === status && task.id !== id)
-        .sort((a, b) => a.position - b.position);
-      movedTask.position = column.length ? column[column.length - 1].position + 1 : 0;
+    },
+    async addTask(fields) {
+      this.errorMessage = '';
+      try {
+        const response = await TaskDataService.create({
+          title: fields.title,
+          description: fields.description,
+          status: fields.status,
+          priority: fields.priority,
+          due_at: fields.due_at,
+          tag_ids: fields.tags.map((tag) => tag.id),
+        });
+        this.tasks.push(response.data);
+      } catch (error) {
+        this.errorMessage = messageOf(error);
+      }
+    },
+    // Status changes go through moveTask.
+    async updateTask(id, changes) {
+      this.errorMessage = '';
+      try {
+        const response = await TaskDataService.update(id, {
+          title: changes.title,
+          description: changes.description,
+          priority: changes.priority,
+          due_at: changes.due_at,
+          tag_ids: changes.tags.map((tag) => tag.id),
+        });
+        this.replaceTask(response.data);
+      } catch (error) {
+        this.errorMessage = messageOf(error);
+      }
+    },
+    async deleteTask(id) {
+      this.errorMessage = '';
+      try {
+        await TaskDataService.delete(id);
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      } catch (error) {
+        this.errorMessage = messageOf(error);
+      }
+    },
+    // The server puts the task at the end of the column and sets completed_at.
+    async moveTask(id, status) {
+      this.errorMessage = '';
+      try {
+        const response = await TaskDataService.move(id, status);
+        this.replaceTask(response.data.task);
+      } catch (error) {
+        this.errorMessage = messageOf(error);
+      }
+    },
+    replaceTask(updatedTask) {
+      const index = this.tasks.findIndex((task) => task.id === updatedTask.id);
+      this.tasks[index] = updatedTask;
     },
     toggleTag(id) {
       if (this.activeTagIds.includes(id)) {
