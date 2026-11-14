@@ -96,6 +96,7 @@ A task, as returned by the server (`user_id` is never sent):
 
 The client never sends `position`. A new task and a moved task go at the end of their column.
 `PUT /tasks/:id` replaces the tags with `tag_ids`. `GET /tasks` answers every task of the user.
+`completed_at` is set when a task goes to Done, and cleared when it leaves Done.
 
 ## Tags
 
@@ -125,7 +126,7 @@ A tag is `{ id, name, color, created_at }`. Two tags of the same user cannot hav
 
 | Rule | Value |
 |:----------------------------------------|:----------------------------------------|
-| A task moved to Done | 10 fries, once per task (`rewarded_at`) |
+| A task moved to Done with `PUT /tasks/:id/move` | 10 fries, once per task (`rewarded_at`). A task created in Done earns nothing |
 | Done before `due_at` | 5 more fries |
 | A box | 50 fries |
 | Chance of a rarity in a box | common 60, rare 25, epic 12, legendary 3 (in percent) |

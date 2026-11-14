@@ -34,6 +34,7 @@ module.exports = (connex, Sequelize) => {
     },
     {
       timestamps: true,
+      defaultScope: { attributes: { exclude: ['user_id'] } },
       indexes: [{ fields: ['user_id', 'status', 'position'] }, { fields: ['user_id', 'due_at'] }],
     },
   );
