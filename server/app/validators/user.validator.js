@@ -27,3 +27,8 @@ exports.update = [
     .isInt({ min: 1, max: 127 }),
   validate,
 ];
+
+exports.companion = [
+  body('poutine_id', 'poutine_id must be a poutine id.').isInt({ min: 1 }),
+  validate,
+];

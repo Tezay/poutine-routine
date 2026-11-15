@@ -18,6 +18,7 @@ module.exports = (app) => {
   router.get('/auth', requireAuth, user.auth);
   router.post('/logout', user.logout);
   router.put('/', requireAuth, rules.update, user.update);
+  router.put('/companion', requireAuth, rules.companion, user.updateCompanion);
   router.delete('/', requireAuth, user.delete);
 
   app.use('/api/user', router);
