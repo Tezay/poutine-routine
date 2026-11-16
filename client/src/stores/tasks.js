@@ -113,6 +113,21 @@ export const useTasksStore = defineStore('tasks', {
       const index = this.tasks.findIndex((task) => task.id === updatedTask.id);
       this.tasks[index] = updatedTask;
     },
+    // The tag form shows the errors, so these actions do not catch them.
+    async addTag(fields) {
+      const response = await TagDataService.create(fields);
+      this.tags.push(response.data);
+    },
+    // The tasks keep a copy of their tags, so everything is loaded again.
+    async updateTag(id, changes) {
+      await TagDataService.update(id, changes);
+      await this.fetchAll();
+    },
+    async deleteTag(id) {
+      await TagDataService.delete(id);
+      this.activeTagIds = this.activeTagIds.filter((tagId) => tagId !== id);
+      await this.fetchAll();
+    },
     toggleTag(id) {
       if (this.activeTagIds.includes(id)) {
         this.activeTagIds = this.activeTagIds.filter((tagId) => tagId !== id);
