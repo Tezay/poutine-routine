@@ -9,9 +9,10 @@
       <PoutineSprite :slug="companion.slug" class="size-48" />
       <h3 class="font-pixel text-xl">{{ companion.name }}</h3>
       <p
+        v-if="companion.lore"
         class="rounded-md border border-border-muted bg-bg-default px-3 py-1.5 text-sm text-fg-muted"
       >
-        One more task and I get my gravy.
+        {{ companion.lore }}
       </p>
     </div>
     <p v-else class="text-sm text-fg-muted">Open a box to get your first companion.</p>

@@ -24,11 +24,14 @@
     </section>
 
     <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
-      <article
+      <button
         v-for="poutine in poutines"
         :key="poutine.id"
+        type="button"
+        :disabled="!isOwned(poutine)"
         class="flex flex-col items-center rounded-xl border p-4"
         :class="getCardClasses(poutine)"
+        @click="selectedPoutine = poutine"
       >
         <div class="relative mt-4 mb-4 w-full">
           <div
@@ -60,25 +63,34 @@
         >
           {{ displayRarity(poutine) }}
         </span>
-      </article>
+      </button>
     </section>
   </div>
+
+  <PoutineModal v-if="selectedPoutine" :poutine="selectedPoutine" @close="selectedPoutine = null" />
 </template>
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
+import PoutineModal from '../components/PoutineModal.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
 import { usePoutinesStore } from '../stores/poutines.js';
 
 export default {
   components: {
     AppTopbar,
+    PoutineModal,
     PoutineSprite,
   },
   setup() {
     const poutinesStore = usePoutinesStore();
     return {
       poutinesStore,
+    };
+  },
+  data() {
+    return {
+      selectedPoutine: null,
     };
   },
   computed: {
@@ -108,7 +120,7 @@ export default {
     },
     getCardClasses(poutine) {
       if (!this.isOwned(poutine)) return 'bg-bg-muted border-dashed border-border-muted';
-      return 'bg-bg-default border-border-muted';
+      return 'bg-bg-default border-border-muted cursor-pointer hover:border-border-accent';
     },
     getRarityClasses(rarity) {
       const baseClass = 'font-medium';
