@@ -18,7 +18,7 @@
           >
             −
           </button>
-          <span class="w-10 bg-bg-default text-center font-semibold leading-8">{{
+          <span class="w-10 bg-bg-default text-center leading-8 font-semibold">{{
             dailyGoal
           }}</span>
           <button
@@ -49,14 +49,14 @@
           v-for="poutine in ownedPoutines"
           :key="poutine.id"
           type="button"
-          :aria-pressed="poutine.id === companionId"
+          :aria-pressed="poutine.id === user.companion_poutine_id"
           class="flex w-28 cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-1.5 text-center text-xs"
           :class="
-            poutine.id === companionId
+            poutine.id === user.companion_poutine_id
               ? 'border-border-accent font-semibold text-fg-accent'
               : 'border-border-default text-fg-muted'
           "
-          @click="companionId = poutine.id"
+          @click="selectCompanion(poutine.id)"
         >
           <span class="flex w-full justify-center rounded-md bg-bg-inset py-1">
             <PoutineSprite :slug="poutine.slug" class="size-24" />
@@ -78,7 +78,7 @@
         type="email"
         class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2"
       />
-      <label for="password" class="mb-1 mt-3 block font-semibold">Password</label>
+      <label for="password" class="mt-3 mb-1 block font-semibold">Password</label>
       <input
         id="password"
         v-model="password"
@@ -86,7 +86,7 @@
         aria-describedby="password-hint"
         class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2"
       />
-      <p id="password-hint" class="mb-3 mt-1 text-xs text-fg-muted">
+      <p id="password-hint" class="mt-1 mb-3 text-xs text-fg-muted">
         Leave it empty to keep your current password.
       </p>
       <button
@@ -119,9 +119,9 @@ import AppTopbar from '../components/AppTopbar.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
 import TagManager from '../components/TagManager.vue';
 import ThemePicker from '../components/ThemePicker.vue';
-import poutines from '../mock/poutines.js';
 import UserDataService from '../services/UserDataService.js';
 import { useAuthStore } from '../stores/auth.js';
+import { usePoutinesStore } from '../stores/poutines.js';
 
 export default {
   components: {
@@ -132,8 +132,10 @@ export default {
   },
   setup() {
     const authStore = useAuthStore();
+    const poutinesStore = usePoutinesStore();
     return {
       authStore,
+      poutinesStore,
     };
   },
   data() {
@@ -141,10 +143,8 @@ export default {
     return {
       goalReward: 20,
       dailyGoal: user.daily_goal,
-      companionId: user.companion_poutine_id,
       email: user.email,
       password: '',
-      ownedPoutines: poutines.filter((poutine) => poutine.quantity > 0),
       serverError: '',
       isSaved: false,
     };
@@ -153,8 +153,20 @@ export default {
     user() {
       return this.authStore.user ?? {};
     },
+    ownedPoutines() {
+      return this.poutinesStore.ownedPoutines;
+    },
   },
   methods: {
+    async selectCompanion(poutineId) {
+      this.serverError = '';
+      try {
+        const response = await UserDataService.updateCompanion(poutineId);
+        this.authStore.setUser(response.data);
+      } catch (error) {
+        this.serverError = error.response?.data?.message ?? 'Cannot reach the server.';
+      }
+    },
     async updateAccount() {
       this.serverError = '';
       this.isSaved = false;
