@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const db = require('../models');
 const catalogue = require('./data/poutines');
 const demo = require('./data/demo');
+const debloco = require('./data/all-unlock');
+const tricho = require('./data/cheat-demo');
+
+const accounts = [demo, debloco, tricho];
 
 const Poutine = db.poutines;
 const User = db.users;
@@ -25,30 +29,33 @@ async function seedPoutines() {
   }
 }
 
-async function seedDemo() {
-  const companion = await Poutine.findOne({ where: { slug: demo.companion } });
-  if (!companion) {
-    throw new Error(`Unknown companion in demo data: ${demo.companion}`);
+async function seedAccount(data) {
+  let companion = null;
+  if (data.companion) {
+    companion = await Poutine.findOne({ where: { slug: data.companion } });
+    if (!companion) {
+      throw new Error(`Unknown companion for ${data.user.username}: ${data.companion}`);
+    }
   }
 
   const [user] = await User.findOrCreate({
-    where: { email: demo.user.email },
+    where: { email: data.user.email },
     defaults: {
-      username: demo.user.username,
-      password_hash: await bcrypt.hash(demo.user.password, 10),
-      fries_balance: demo.user.fries_balance,
-      daily_goal: demo.user.daily_goal,
-      current_streak: demo.user.current_streak,
-      best_streak: demo.user.best_streak,
-      last_completed_on: demo.user.last_completed_on,
-      companion_poutine_id: companion.id,
+      username: data.user.username,
+      password_hash: await bcrypt.hash(data.user.password, 10),
+      fries_balance: data.user.fries_balance,
+      daily_goal: data.user.daily_goal,
+      current_streak: data.user.current_streak,
+      best_streak: data.user.best_streak,
+      last_completed_on: data.user.last_completed_on,
+      companion_poutine_id: companion ? companion.id : null,
     },
   });
 
-  for (const owned of demo.poutines) {
+  for (const owned of data.poutines) {
     const poutine = await Poutine.findOne({ where: { slug: owned.slug } });
     if (!poutine) {
-      throw new Error(`Unknown poutine in demo data: ${owned.slug}`);
+      throw new Error(`Unknown poutine for ${data.user.username}: ${owned.slug}`);
     }
     await UserPoutine.findOrCreate({
       where: { user_id: user.id, poutine_id: poutine.id },
@@ -57,7 +64,7 @@ async function seedDemo() {
   }
 
   const tagsByName = {};
-  for (const item of demo.tags) {
+  for (const item of data.tags) {
     const [tag] = await Tag.findOrCreate({
       where: { user_id: user.id, name: item.name },
       defaults: { color: item.color },
@@ -65,7 +72,7 @@ async function seedDemo() {
     tagsByName[item.name] = tag;
   }
 
-  for (const item of demo.tasks) {
+  for (const item of data.tasks) {
     const [task] = await Task.findOrCreate({
       where: { user_id: user.id, title: item.title },
       defaults: {
@@ -85,7 +92,10 @@ async function seedDemo() {
 async function main() {
   await db.connex.sync();
   await seedPoutines();
-  await seedDemo();
+  for (const account of accounts) {
+    await seedAccount(account);
+    console.log(`Seeded ${account.user.username}`);
+  }
   console.log('Seed done.');
 }
 
