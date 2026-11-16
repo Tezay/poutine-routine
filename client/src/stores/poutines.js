@@ -12,11 +12,6 @@ export const usePoutinesStore = defineStore('poutines', {
       errorMessage: '',
     };
   },
-  getters: {
-    ownedPoutines(state) {
-      return state.poutines.filter((poutine) => poutine.quantity > 0);
-    },
-  },
   actions: {
     async fetchAll() {
       this.isLoading = true;
