@@ -7,34 +7,36 @@
 
 /* Color palette used for Poutine Routine */
 :root {
-  --bg-default: #fffdf8;
-  --bg-muted: #f7f1e6;
-  --bg-muted-hover: #f0e7d7;
-  --bg-inset: #f2e9d9;
-  --bg-neutral-muted: #7a6a5820;
-  --bg-accent-muted: #f7e7d4;
-  --bg-success-muted: #e8f0df;
-  --bg-attention-muted: #fbf1d8;
-  --bg-danger-muted: #f9e3e0;
-  --bg-done-muted: #efe6f5;
+  color-scheme: light dark;
 
-  --bg-primary-emphasis: #8a5a2b;
-  --bg-primary-emphasis-hover: #74491f;
-  --bg-danger-emphasis: #b3322c;
+  --bg-default: light-dark(#fffdf8, #17130f);
+  --bg-muted: light-dark(#f7f1e6, #201a15);
+  --bg-muted-hover: light-dark(#f0e7d7, #2b231c);
+  --bg-inset: light-dark(#f2e9d9, #100d0a);
+  --bg-neutral-muted: light-dark(#7a6a5820, #a8957f33);
+  --bg-accent-muted: light-dark(#f7e7d4, #3a2716);
+  --bg-success-muted: light-dark(#e8f0df, #1f2a17);
+  --bg-attention-muted: light-dark(#fbf1d8, #33280f);
+  --bg-danger-muted: light-dark(#f9e3e0, #3a1a17);
+  --bg-done-muted: light-dark(#efe6f5, #2a2036);
 
-  --fg-default: #2b2118;
-  --fg-muted: #7a6a58;
-  --fg-on-emphasis: #fffdf8;
-  --fg-accent: #a1571f;
-  --fg-success: #4f7a34;
-  --fg-attention: #a97b16;
-  --fg-danger: #b3322c;
-  --fg-done: #6b4c9a;
+  --bg-primary-emphasis: light-dark(#8a5a2b, #8a5a2b);
+  --bg-primary-emphasis-hover: light-dark(#74491f, #9c6834);
+  --bg-danger-emphasis: light-dark(#b3322c, #c2413a);
 
-  --border-default: #e5d9c3;
-  --border-muted: #eee5d5;
-  --border-accent: #a1571f;
-  --border-danger: #b3322c;
+  --fg-default: light-dark(#2b2118, #f2ebe1);
+  --fg-muted: light-dark(#7a6a58, #a8957f);
+  --fg-on-emphasis: light-dark(#fffdf8, #fffdf8);
+  --fg-accent: light-dark(#a1571f, #e0904f);
+  --fg-success: light-dark(#4f7a34, #8cbf6a);
+  --fg-attention: light-dark(#a97b16, #d9a93a);
+  --fg-danger: light-dark(#b3322c, #f0776b);
+  --fg-done: light-dark(#6b4c9a, #b392e0);
+
+  --border-default: light-dark(#e5d9c3, #3a3027);
+  --border-muted: light-dark(#eee5d5, #2c241d);
+  --border-accent: light-dark(#a1571f, #e0904f);
+  --border-danger: light-dark(#b3322c, #f0776b);
 }
 
 /* Tailwind theme mapping. Generates bg-, text-, and border- utilities from the tokens above. */
