@@ -6,9 +6,6 @@ Continuing Education, Fall 2026).
 
 **Status:** Milestone 2 is done (frontend on test data). Milestone 3, with the backend, is next.
 
-The frontend is published on GitHub Pages (mock data, no API yet):
-<https://tezay.github.io/poutine-routine/>
-
 ## Documentation
 
 Each milestone has a report, written in Markdown and built as a PDF:
@@ -35,7 +32,7 @@ poutine-routine/
 ├── client/     Vue 3 frontend, see client/README.md to get it running
 ├── server/     Node.js / Express API (Milestone 3)
 ├── docs/       milestone reports, database schema, diagrams and mockups
-└── .github/    pull request template, CI and GitHub Pages workflows
+└── .github/    pull request template and CI workflows
 ```
 
 ## Getting started
