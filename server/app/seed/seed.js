@@ -3,10 +3,10 @@ const bcrypt = require('bcryptjs');
 const db = require('../models');
 const catalogue = require('./data/poutines');
 const demo = require('./data/demo');
-const debloco = require('./data/all-unlock');
-const tricho = require('./data/cheat-demo');
+const allUnlock = require('./data/all-unlock');
+const cheatDemo = require('./data/cheat-demo');
 
-const accounts = [demo, debloco, tricho];
+const accounts = [demo, allUnlock, cheatDemo];
 
 const Poutine = db.poutines;
 const User = db.users;

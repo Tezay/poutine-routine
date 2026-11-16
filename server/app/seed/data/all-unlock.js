@@ -1,3 +1,4 @@
+const demo = require('./demo');
 const poutines = require('./poutines');
 
 module.exports = {
@@ -12,12 +13,7 @@ module.exports = {
     last_completed_on: null,
   },
   companion: 'poutine-poutine',
-  poutines: poutines.map((p) => ({ slug: p.slug, quantity: 1 })),
-  tags: [
-    { name: 'School', color: '#0969da' },
-    { name: 'Sport', color: '#1a7f37' },
-    { name: 'Travel', color: '#8250df' },
-    { name: 'Life', color: '#9a6700' },
-  ],
+  poutines: poutines.map((poutine) => ({ slug: poutine.slug, quantity: 1 })),
+  tags: demo.tags,
   tasks: [],
 };
