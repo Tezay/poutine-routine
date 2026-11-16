@@ -4,7 +4,6 @@ import TagDataService from '../services/TagDataService.js';
 import { useAuthStore } from './auth.js';
 
 const messageOf = (error) => error.response?.data?.message ?? 'Cannot reach the server.';
-let rewardTimer = null;
 
 export const useTasksStore = defineStore('tasks', {
   state() {
@@ -102,29 +101,23 @@ export const useTasksStore = defineStore('tasks', {
         this.errorMessage = messageOf(error);
       }
     },
-    // The server puts the task at the end of the column, sets completed_at and pays the fries.
+    // The server puts the task at the end of the column and sets completed_at.
     async moveTask(id, status) {
       this.errorMessage = '';
       try {
         const response = await TaskDataService.move(id, status);
         this.replaceTask(response.data.task);
-        useAuthStore().setFriesBalance(response.data.fries_balance);
-        this.showReward(response.data.fries_earned);
+        useAuthStore().user.fries_balance = response.data.fries_balance;
+        if (response.data.fries_earned > 0) {
+          this.friesEarned = response.data.fries_earned;
+          setTimeout(() => {
+            this.friesEarned = 0;
+          }, 3000);
+        }
       } catch (error) {
         this.errorMessage = messageOf(error);
       }
     },
-
-    showReward(amount) {
-      clearTimeout(rewardTimer);
-      this.friesEarned = amount;
-      if (amount > 0) {
-        rewardTimer = setTimeout(() => {
-          this.friesEarned = 0;
-        }, 4000);
-      }
-    },
-
     replaceTask(updatedTask) {
       const index = this.tasks.findIndex((task) => task.id === updatedTask.id);
       this.tasks[index] = updatedTask;

@@ -11,6 +11,15 @@
       aria-label="Search tasks"
       class="ml-auto w-64 rounded-md border border-border-default bg-bg-default px-3 py-1.5 text-sm"
     />
+    <!-- Always in the page (for screen readers) -->
+    <span role="status">
+      <span
+        v-if="tasksStore.friesEarned > 0"
+        class="rounded-full bg-bg-success-muted px-3 py-1 text-sm font-semibold text-fg-success"
+      >
+        +{{ tasksStore.friesEarned }} 🍟
+      </span>
+    </span>
     <span class="rounded-full border border-border-default px-3 py-1 text-sm font-semibold">
       🍟 {{ user.fries_balance }}
     </span>
