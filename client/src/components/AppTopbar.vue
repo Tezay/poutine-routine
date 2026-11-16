@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { useAuthStore } from '../stores/auth.js';
+import user from '../mock/user.js';
 import { useTasksStore } from '../stores/tasks.js';
 
 export default {
@@ -36,17 +36,15 @@ export default {
   },
   emits: ['action'],
   setup() {
-    const authStore = useAuthStore();
     const tasksStore = useTasksStore();
     return {
-      authStore,
       tasksStore,
     };
   },
-  computed: {
-    user() {
-      return this.authStore.user ?? {};
-    },
+  data() {
+    return {
+      user,
+    };
   },
 };
 </script>
