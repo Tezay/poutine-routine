@@ -1,5 +1,6 @@
 const db = require('../models');
 
+const User = db.users;
 const Task = db.tasks;
 const Tag = db.tags;
 const FriesTransaction = db.friesTransactions;
@@ -111,7 +112,9 @@ exports.move = async (req, res) => {
   task.position = await endOfColumn(req.user.id, status);
   task.status = status;
 
-  await db.connex.transaction(async (transaction) => {
+  // Same lock as a box, so a box bought at the same time is not overwritten.
+  const updatedUser = await db.connex.transaction(async (transaction) => {
+    const user = await User.findByPk(req.user.id, { transaction, lock: true });
     await task.save({ transaction });
     if (isPaid) {
       await FriesTransaction.create(
@@ -126,17 +129,15 @@ exports.move = async (req, res) => {
       );
     }
     if (friesEarned > 0) {
-      await req.user.update(
-        { fries_balance: req.user.fries_balance + friesEarned },
-        { transaction },
-      );
+      await user.update({ fries_balance: user.fries_balance + friesEarned }, { transaction });
     }
+    return user;
   });
 
   res.send({
     task: await findTask(task.id, req.user.id),
     fries_earned: friesEarned,
-    fries_balance: req.user.fries_balance,
+    fries_balance: updatedUser.fries_balance,
   });
 };
 
