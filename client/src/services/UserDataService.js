@@ -16,6 +16,9 @@ class UserDataService {
   update(data) {
     return http.put('/user', data);
   }
+  updateCompanion(poutineId) {
+    return http.put('/user/companion', { poutine_id: poutineId });
+  }
   delete() {
     return http.delete('/user');
   }

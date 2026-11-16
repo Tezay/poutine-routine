@@ -18,7 +18,7 @@
           >
             −
           </button>
-          <span class="w-10 bg-bg-default text-center font-semibold leading-8">{{
+          <span class="w-10 bg-bg-default text-center leading-8 font-semibold">{{
             dailyGoal
           }}</span>
           <button
@@ -41,31 +41,6 @@
       </div>
     </section>
 
-    <section class="rounded-xl border border-border-default bg-bg-default p-5">
-      <h2 class="mb-3 text-base font-semibold">Companion</h2>
-      <p class="text-fg-muted">The poutine that keeps you company on the board.</p>
-      <div class="mt-3 flex flex-wrap gap-3">
-        <button
-          v-for="poutine in ownedPoutines"
-          :key="poutine.id"
-          type="button"
-          :aria-pressed="poutine.id === companionId"
-          class="flex w-28 cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-1.5 text-center text-xs"
-          :class="
-            poutine.id === companionId
-              ? 'border-border-accent font-semibold text-fg-accent'
-              : 'border-border-default text-fg-muted'
-          "
-          @click="companionId = poutine.id"
-        >
-          <span class="flex w-full justify-center rounded-md bg-bg-inset py-1">
-            <PoutineSprite :slug="poutine.slug" class="size-24" />
-          </span>
-          <span>{{ poutine.name }}</span>
-        </button>
-      </div>
-    </section>
-
     <TagManager />
 
     <ThemePicker />
@@ -78,7 +53,7 @@
         type="email"
         class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2"
       />
-      <label for="password" class="mb-1 mt-3 block font-semibold">Password</label>
+      <label for="password" class="mt-3 mb-1 block font-semibold">Password</label>
       <input
         id="password"
         v-model="password"
@@ -86,7 +61,7 @@
         aria-describedby="password-hint"
         class="w-full rounded-md border border-border-default bg-bg-default px-3 py-2"
       />
-      <p id="password-hint" class="mb-3 mt-1 text-xs text-fg-muted">
+      <p id="password-hint" class="mt-1 mb-3 text-xs text-fg-muted">
         Leave it empty to keep your current password.
       </p>
       <button
@@ -116,17 +91,14 @@
 
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
-import PoutineSprite from '../components/PoutineSprite.vue';
 import TagManager from '../components/TagManager.vue';
 import ThemePicker from '../components/ThemePicker.vue';
-import poutines from '../mock/poutines.js';
 import UserDataService from '../services/UserDataService.js';
 import { useAuthStore } from '../stores/auth.js';
 
 export default {
   components: {
     AppTopbar,
-    PoutineSprite,
     TagManager,
     ThemePicker,
   },
@@ -141,10 +113,8 @@ export default {
     return {
       goalReward: 20,
       dailyGoal: user.daily_goal,
-      companionId: user.companion_poutine_id,
       email: user.email,
       password: '',
-      ownedPoutines: poutines.filter((poutine) => poutine.quantity > 0),
       serverError: '',
       isSaved: false,
     };
