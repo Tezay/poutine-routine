@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import TaskDataService from '../services/TaskDataService.js';
 import TagDataService from '../services/TagDataService.js';
+import { useAuthStore } from './auth.js';
 
 const messageOf = (error) => error.response?.data?.message ?? 'Cannot reach the server.';
 
@@ -13,6 +14,7 @@ export const useTasksStore = defineStore('tasks', {
       searchQuery: '',
       isLoading: false,
       errorMessage: '',
+      friesEarned: 0,
     };
   },
   getters: {
@@ -105,6 +107,13 @@ export const useTasksStore = defineStore('tasks', {
       try {
         const response = await TaskDataService.move(id, status);
         this.replaceTask(response.data.task);
+        useAuthStore().user.fries_balance = response.data.fries_balance;
+        if (response.data.fries_earned > 0) {
+          this.friesEarned = response.data.fries_earned;
+          setTimeout(() => {
+            this.friesEarned = 0;
+          }, 3000);
+        }
       } catch (error) {
         this.errorMessage = messageOf(error);
       }
