@@ -2,38 +2,34 @@
   <AppTopbar title="Poutinerie" />
 
   <div class="p-6">
-    <p v-if="poutinesStore.errorMessage" role="alert" class="mb-4 text-sm text-fg-danger">
-      {{ poutinesStore.errorMessage }}
-    </p>
-
     <section
-      class="mb-6 flex items-center justify-between rounded-lg bg-bg-muted p-4"
+      class="flex items-center justify-between p-4 mb-6 rounded-lg bg-bg-muted"
       aria-label="Collection progress"
     >
-      <div class="font-medium text-fg-default">
+      <div class="text-fg-default font-medium">
         {{ collectedCount }} / {{ totalCount }} collected
       </div>
-      <div class="mx-4 h-2 flex-1 overflow-hidden rounded-full bg-bg-inset" aria-hidden="true">
+      <div class="flex-1 mx-4 h-2 rounded-full bg-bg-inset overflow-hidden" aria-hidden="true">
         <div
           class="h-full bg-bg-primary-emphasis transition-all duration-300"
           :style="{ width: progressPercentage + '%' }"
         ></div>
       </div>
       <!-- Static for now: no field in the mock data provides this value. -->
-      <div class="text-sm text-fg-muted">Next box in 2 tasks</div>
+      <div class="text-fg-muted text-sm">Next box in 2 tasks</div>
     </section>
 
     <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
       <article
         v-for="poutine in poutines"
         :key="poutine.id"
-        class="flex flex-col items-center rounded-xl border p-4"
+        class="flex flex-col items-center p-4 rounded-xl border"
         :class="getCardClasses(poutine)"
       >
-        <div class="relative mt-4 mb-4 w-full">
+        <div class="w-full relative mb-4 mt-4">
           <div
             v-if="poutine.quantity > 1"
-            class="absolute right-0 bottom-full mb-1 text-xs font-medium text-fg-muted"
+            class="absolute bottom-full right-0 mb-1 text-xs text-fg-muted font-medium"
           >
             ×{{ poutine.quantity }}
           </div>
@@ -48,14 +44,14 @@
         </div>
 
         <h2
-          class="mb-2 text-center font-pixel"
+          class="font-pixel mb-2 text-center"
           :class="isOwned(poutine) ? 'text-fg-default' : 'text-fg-muted'"
         >
           {{ displayName(poutine) }}
         </h2>
 
         <span
-          class="mt-auto rounded-full px-2 py-1 text-xs"
+          class="mt-auto px-2 py-1 text-xs rounded-full"
           :class="getRarityClasses(displayRarity(poutine))"
         >
           {{ displayRarity(poutine) }}
@@ -68,23 +64,19 @@
 <script>
 import AppTopbar from '../components/AppTopbar.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
-import { usePoutinesStore } from '../stores/poutines.js';
+import poutines from '../mock/poutines.js';
 
 export default {
   components: {
     AppTopbar,
     PoutineSprite,
   },
-  setup() {
-    const poutinesStore = usePoutinesStore();
+  data() {
     return {
-      poutinesStore,
+      poutines,
     };
   },
   computed: {
-    poutines() {
-      return this.poutinesStore.poutines;
-    },
     totalCount() {
       return this.poutines.length;
     },

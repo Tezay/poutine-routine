@@ -10,13 +10,9 @@
       aria-modal="true"
       aria-labelledby="box-opening-title"
       tabindex="-1"
-      class="w-full max-w-sm overflow-hidden rounded-lg border border-border-default bg-bg-default outline-none"
+      class="w-full max-w-sm overflow-hidden outline-none rounded-lg border border-border-default bg-bg-default"
     >
-      <div
-        v-if="poutine"
-        class="flex flex-col items-center gap-3 px-6 py-6 text-center"
-        aria-live="polite"
-      >
+      <div class="flex flex-col items-center gap-3 px-6 py-6 text-center" aria-live="polite">
         <span class="rounded-full px-2 py-1 text-xs" :class="rarityClasses">
           {{ poutine.rarity }}
         </span>
@@ -35,10 +31,6 @@
           New in your collection
         </span>
       </div>
-
-      <p v-else-if="errorMessage" role="alert" class="p-6 text-center text-sm text-fg-danger">
-        {{ errorMessage }}
-      </p>
 
       <div
         class="flex items-center justify-center gap-2 border-t border-border-default bg-bg-muted px-6 py-4"
@@ -65,8 +57,13 @@
 
 <script>
 import PoutineSprite from './PoutineSprite.vue';
-import { useAuthStore } from '../stores/auth.js';
-import { usePoutinesStore } from '../stores/poutines.js';
+import poutines from '../mock/poutines.js';
+import user from '../mock/user.js';
+
+function pickRandomPoutine() {
+  const index = Math.floor(Math.random() * poutines.length);
+  return poutines[index];
+}
 
 export default {
   components: {
@@ -76,29 +73,22 @@ export default {
     boxCost: { type: Number, required: true },
   },
   emits: ['close'],
-  setup() {
-    const authStore = useAuthStore();
-    const poutinesStore = usePoutinesStore();
-    return {
-      authStore,
-      poutinesStore,
-    };
-  },
   data() {
     return {
-      poutine: null,
-      isNew: false,
-      isOpening: false,
-      errorMessage: '',
+      user,
+      poutine: pickRandomPoutine(),
     };
   },
   computed: {
+    isNew() {
+      return this.poutine.quantity === 0;
+    },
     canOpenAnother() {
-      return !this.isOpening && (this.authStore.user?.fries_balance ?? 0) >= this.boxCost;
+      return this.user.fries_balance >= this.boxCost;
     },
     rarityClasses() {
       const baseClass = 'font-medium';
-      switch (this.poutine?.rarity) {
+      switch (this.poutine.rarity) {
         case 'common':
           return `${baseClass} bg-bg-neutral-muted text-fg-muted`;
         case 'rare':
@@ -114,21 +104,10 @@ export default {
   },
   mounted() {
     this.$refs.dialog.focus();
-    this.openAnother();
   },
   methods: {
-    async openAnother() {
-      this.errorMessage = '';
-      this.isOpening = true;
-      try {
-        const result = await this.poutinesStore.openBox();
-        this.poutine = result.poutine;
-        this.isNew = result.is_new;
-      } catch (error) {
-        this.errorMessage = error.response?.data?.message ?? 'Cannot reach the server.';
-      } finally {
-        this.isOpening = false;
-      }
+    openAnother() {
+      this.poutine = pickRandomPoutine();
     },
   },
 };

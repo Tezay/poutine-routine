@@ -29,8 +29,7 @@
 
     <button
       type="button"
-      :disabled="!canOpenBox"
-      class="w-full cursor-pointer rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover disabled:cursor-not-allowed disabled:opacity-50"
+      class="w-full rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
       @click="showBoxModal = true"
     >
       Open a box · {{ boxCost }} 🍟
@@ -41,45 +40,27 @@
 
 <script>
 import PoutineSprite from './PoutineSprite.vue';
+import user from '../mock/user.js';
+import poutines from '../mock/poutines.js';
 import BoxOpeningModal from './BoxOpeningModal.vue';
-import { useAuthStore } from '../stores/auth.js';
-import { usePoutinesStore } from '../stores/poutines.js';
 
 export default {
   components: {
     PoutineSprite,
     BoxOpeningModal,
   },
-  setup() {
-    const authStore = useAuthStore();
-    const poutinesStore = usePoutinesStore();
-    return {
-      authStore,
-      poutinesStore,
-    };
-  },
   data() {
     return {
+      user,
+      poutines,
       boxCost: 50,
       showBoxModal: false,
     };
   },
   computed: {
-    user() {
-      return this.authStore.user ?? {};
-    },
     companion() {
-      return this.poutinesStore.poutines.find(
-        (poutine) => poutine.id === this.user.companion_poutine_id,
-      );
+      return this.poutines.find((poutine) => poutine.id === this.user.companion_poutine_id);
     },
-    canOpenBox() {
-      return (this.user.fries_balance ?? 0) >= this.boxCost;
-    },
-  },
-  // The companion rail is on every page once logged in, so it loads the poutines.
-  mounted() {
-    this.poutinesStore.fetchAll();
   },
 };
 </script>
