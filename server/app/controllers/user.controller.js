@@ -92,3 +92,16 @@ exports.delete = async (req, res) => {
   res.clearCookie(authConfig.COOKIE_NAME, authConfig.COOKIE_OPTIONS);
   res.send({ message: 'Account deleted.' });
 };
+
+exports.updateCompanion = async (req, res) => {
+  const { poutine_id } = req.body;
+  const owned = await UserPoutine.findOne({
+    where: { user_id: req.user.id, poutine_id },
+  });
+  if (!owned) {
+    return res.status(400).send({ message: 'You do not own this poutine.' });
+  }
+
+  await req.user.update({ companion_poutine_id: poutine_id });
+  res.send(await User.findByPk(req.user.id));
+};
