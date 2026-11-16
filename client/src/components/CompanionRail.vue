@@ -19,11 +19,11 @@
     <div class="flex flex-col gap-2 text-sm">
       <div class="flex justify-between">
         <span class="text-fg-muted">Daily goal</span>
-        <span>{{ user.daily_goal }} tasks</span>
+        <span>{{ user?.daily_goal }} tasks</span>
       </div>
       <div class="flex justify-between">
         <span class="text-fg-muted">Streak</span>
-        <span>🔥 {{ user.current_streak }} days</span>
+        <span>🔥 {{ user?.current_streak }} days</span>
       </div>
     </div>
 
@@ -39,10 +39,11 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import PoutineSprite from './PoutineSprite.vue';
-import user from '../mock/user.js';
 import poutines from '../mock/poutines.js';
 import BoxOpeningModal from './BoxOpeningModal.vue';
+import { useAuthStore } from '../stores/auth.js';
 
 export default {
   components: {
@@ -51,15 +52,15 @@ export default {
   },
   data() {
     return {
-      user,
       poutines,
       boxCost: 50,
       showBoxModal: false,
     };
   },
   computed: {
+    ...mapState(useAuthStore, ['user']),
     companion() {
-      return this.poutines.find((poutine) => poutine.id === this.user.companion_poutine_id);
+      return this.poutines.find((poutine) => poutine.id === this.user?.companion_poutine_id);
     },
   },
 };

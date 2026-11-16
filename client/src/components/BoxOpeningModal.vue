@@ -56,9 +56,10 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
 import PoutineSprite from './PoutineSprite.vue';
 import poutines from '../mock/poutines.js';
-import user from '../mock/user.js';
+import { useAuthStore } from '../stores/auth.js';
 
 function pickRandomPoutine() {
   const index = Math.floor(Math.random() * poutines.length);
@@ -75,16 +76,16 @@ export default {
   emits: ['close'],
   data() {
     return {
-      user,
       poutine: pickRandomPoutine(),
     };
   },
   computed: {
+    ...mapState(useAuthStore, ['user']),
     isNew() {
       return this.poutine.quantity === 0;
     },
     canOpenAnother() {
-      return this.user.fries_balance >= this.boxCost;
+      return this.user?.fries_balance >= this.boxCost;
     },
     rarityClasses() {
       const baseClass = 'font-medium';

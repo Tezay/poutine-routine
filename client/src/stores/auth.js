@@ -17,6 +17,13 @@ export const useAuthStore = defineStore('auth', {
     setUser(user) {
       this.user = user;
     },
+
+    setFriesBalance(balance) {
+      if (this.user !== null) {
+        this.user.fries_balance = balance;
+      }
+    },
+
     // Asks the server who the cookie belongs to. Any failure means "not logged in".
     async checkAuth() {
       try {

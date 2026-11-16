@@ -11,9 +11,21 @@
       aria-label="Search tasks"
       class="ml-auto w-64 rounded-md border border-border-default bg-bg-default px-3 py-1.5 text-sm"
     />
-    <span class="rounded-full border border-border-default px-3 py-1 text-sm font-semibold">
-      🍟 {{ user.fries_balance }}
-    </span>
+
+    <div class="flex items-center">
+      <span role="status">
+        <span
+          v-if="tasksStore.friesEarned > 0"
+          class="mr-2 rounded-full bg-bg-success-muted px-3 py-1 text-sm font-semibold text-fg-success"
+        >
+          +{{ tasksStore.friesEarned }} 🍟
+        </span>
+      </span>
+      <span class="rounded-full border border-border-default px-3 py-1 text-sm font-semibold">
+        🍟 {{ user?.fries_balance }}
+      </span>
+    </div>
+
     <button
       v-if="actionLabel"
       type="button"
@@ -26,7 +38,8 @@
 </template>
 
 <script>
-import user from '../mock/user.js';
+import { mapState } from 'pinia';
+import { useAuthStore } from '../stores/auth.js';
 import { useTasksStore } from '../stores/tasks.js';
 
 export default {
@@ -41,10 +54,6 @@ export default {
       tasksStore,
     };
   },
-  data() {
-    return {
-      user,
-    };
-  },
+  computed: mapState(useAuthStore, ['user']),
 };
 </script>
