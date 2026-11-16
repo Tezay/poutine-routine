@@ -4,7 +4,7 @@ A secure to-do application with a poutine collection. Finishing a task earns fri
 box, a box gives a random poutine. Course project for MOD8 - Advanced Web Programming (Concordia
 Continuing Education, Fall 2026).
 
-**Status:** Milestone 2 is done (frontend on test data). Milestone 3, with the backend, is next.
+**Status:** Milestone 3 is done: the client, the API and the MySQL database work together.
 
 ## Documentation
 
@@ -18,8 +18,8 @@ Each milestone has a report, written in Markdown and built as a PDF:
 ## Stack
 
 - **Frontend:** Vue 3 (Options API) with Vite, Vue Router, Pinia and Tailwind CSS v4
-- **Backend:** Node.js with Express and Sequelize (Milestone 3)
-- **Database:** MySQL
+- **Backend:** Node.js with Express and Sequelize
+- **Database:** MySQL 8, run with Docker Compose
 
 Details in [`docs/milestone-2/03-architecture.md`](docs/milestone-2/03-architecture.md) (the
 frontend as built) and [`docs/milestone-1/02-solution.md`](docs/milestone-1/02-solution.md) (the
@@ -30,23 +30,43 @@ plan).
 ```
 poutine-routine/
 ├── client/     Vue 3 frontend, see client/README.md to get it running
-├── server/     Node.js / Express API (Milestone 3)
+├── server/     Node.js / Express API, see server/README.md to get it running
 ├── docs/       milestone reports, database schema, diagrams and mockups
 └── .github/    pull request template and CI workflows
 ```
 
 ## Getting started
 
+You need Node.js 20 or later and Docker (it runs MySQL). Use two terminals.
+
+Terminal 1, the database and the API:
+
 ```bash
 git clone https://github.com/Tezay/poutine-routine.git
+cd poutine-routine/server
+npm install
+cp .env.example .env
+docker compose up -d
+npm run seed
+npm start
+```
+
+In `server/.env`, replace `JWT_SECRET` with a long random text before `npm start`.
+
+Terminal 2, the client:
+
+```bash
 cd poutine-routine/client
 npm install
 cp .env.example .env
 npm run dev
 ```
 
-See [`client/README.md`](client/README.md) for prerequisites, environment variables, available
-scripts, the theming system, and coding conventions.
+Open `http://localhost:5173` and log in with a test account from
+[`server/README.md`](server/README.md#test-accounts), or create one.
+
+More details, including how to reset the database, in [`server/README.md`](server/README.md) and
+[`client/README.md`](client/README.md).
 
 ## Contributing
 
