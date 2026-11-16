@@ -9,9 +9,10 @@
       <PoutineSprite :slug="companion.slug" class="size-48" />
       <h3 class="font-pixel text-xl">{{ companion.name }}</h3>
       <p
+        v-if="companion.lore"
         class="rounded-md border border-border-muted bg-bg-default px-3 py-1.5 text-sm text-fg-muted"
       >
-        One more task and I get my gravy.
+        {{ companion.lore }}
       </p>
     </div>
     <p v-else class="text-sm text-fg-muted">Open a box to get your first companion.</p>
@@ -19,17 +20,18 @@
     <div class="flex flex-col gap-2 text-sm">
       <div class="flex justify-between">
         <span class="text-fg-muted">Daily goal</span>
-        <span>{{ user?.daily_goal }} tasks</span>
+        <span>{{ user.daily_goal }} tasks</span>
       </div>
       <div class="flex justify-between">
         <span class="text-fg-muted">Streak</span>
-        <span>🔥 {{ user?.current_streak }} days</span>
+        <span>🔥 {{ user.current_streak }} days</span>
       </div>
     </div>
 
     <button
       type="button"
-      class="w-full rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover"
+      :disabled="!canOpenBox"
+      class="w-full cursor-pointer rounded-md bg-bg-primary-emphasis px-3 py-1.5 text-sm font-medium text-fg-on-emphasis hover:bg-bg-primary-emphasis-hover disabled:cursor-not-allowed disabled:opacity-50"
       @click="showBoxModal = true"
     >
       Open a box · {{ boxCost }} 🍟
@@ -39,29 +41,46 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
 import PoutineSprite from './PoutineSprite.vue';
-import poutines from '../mock/poutines.js';
 import BoxOpeningModal from './BoxOpeningModal.vue';
 import { useAuthStore } from '../stores/auth.js';
+import { usePoutinesStore } from '../stores/poutines.js';
 
 export default {
   components: {
     PoutineSprite,
     BoxOpeningModal,
   },
+  setup() {
+    const authStore = useAuthStore();
+    const poutinesStore = usePoutinesStore();
+    return {
+      authStore,
+      poutinesStore,
+    };
+  },
   data() {
     return {
-      poutines,
       boxCost: 50,
       showBoxModal: false,
     };
   },
   computed: {
-    ...mapState(useAuthStore, ['user']),
-    companion() {
-      return this.poutines.find((poutine) => poutine.id === this.user?.companion_poutine_id);
+    user() {
+      return this.authStore.user ?? {};
     },
+    companion() {
+      return this.poutinesStore.poutines.find(
+        (poutine) => poutine.id === this.user.companion_poutine_id,
+      );
+    },
+    canOpenBox() {
+      return this.user.fries_balance >= this.boxCost;
+    },
+  },
+  // The companion rail is on every page once logged in, so it loads the poutines.
+  mounted() {
+    this.poutinesStore.fetchAll();
   },
 };
 </script>
