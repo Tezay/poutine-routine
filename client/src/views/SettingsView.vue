@@ -68,6 +68,7 @@
 
     <TagManager />
 
+    <ThemePicker />
     <section class="rounded-xl border border-border-default bg-bg-default p-5">
       <h2 class="mb-3 text-base font-semibold">Account</h2>
       <label for="email" class="mb-1 block font-semibold">Email</label>
@@ -117,6 +118,7 @@
 import AppTopbar from '../components/AppTopbar.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
 import TagManager from '../components/TagManager.vue';
+import ThemePicker from '../components/ThemePicker.vue';
 import poutines from '../mock/poutines.js';
 import UserDataService from '../services/UserDataService.js';
 import { useAuthStore } from '../stores/auth.js';
@@ -126,6 +128,7 @@ export default {
     AppTopbar,
     PoutineSprite,
     TagManager,
+    ThemePicker,
   },
   setup() {
     const authStore = useAuthStore();

@@ -13,7 +13,11 @@
         class="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-bg-neutral-muted"
         active-class="bg-bg-neutral-muted font-semibold"
       >
-        <img :src="iconUrl(link.icon)" alt="" class="size-4" />
+        <!-- A mask, not an <img>, so the icon takes the text color in both themes. -->
+        <span
+          class="size-4 bg-current mask-contain mask-center mask-no-repeat"
+          :style="{ maskImage: iconMask(link.icon) }"
+        ></span>
         {{ link.label }}
       </router-link>
     </nav>
@@ -64,8 +68,10 @@ export default {
     this.tasksStore.fetchAll();
   },
   methods: {
-    iconUrl(name) {
-      return new URL(`../assets/icons/${name}.svg`, import.meta.url).href;
+    // Vite turns small .svg files into data URLs with ' inside, so the URL is in double quotes.
+    iconMask(name) {
+      const url = new URL(`../assets/icons/${name}.svg`, import.meta.url).href;
+      return `url("${url}")`;
     },
     isActive(tagId) {
       return this.tasksStore.activeTagIds.includes(tagId);
