@@ -1,7 +1,9 @@
 const db = require('../models');
 
+const User = db.users;
 const Task = db.tasks;
 const Tag = db.tags;
+const FriesTransaction = db.friesTransactions;
 
 // Hides the columns of the task_tags table.
 const withTags = { model: Tag, through: { attributes: [] } };
@@ -96,17 +98,46 @@ exports.move = async (req, res) => {
   }
 
   const { status } = req.body;
+  // rewarded_at is set the first time (so a task that leaves "Done" and comes back pays nothing)
+  const isPaid = status === 'done' && task.status !== 'done' && task.rewarded_at === null;
+  const isOnTime = isPaid && task.due_at !== null && new Date() <= task.due_at;
+  const friesEarned = (isPaid ? 10 : 0) + (isOnTime ? 5 : 0);
+
   if (status !== task.status) {
     task.completed_at = status === 'done' ? new Date() : null;
   }
+  if (isPaid) {
+    task.rewarded_at = new Date();
+  }
   task.position = await endOfColumn(req.user.id, status);
   task.status = status;
-  await task.save();
+
+  // Same lock as a box, so a box bought at the same time is not overwritten.
+  const updatedUser = await db.connex.transaction(async (transaction) => {
+    const user = await User.findByPk(req.user.id, { transaction, lock: true });
+    await task.save({ transaction });
+    if (isPaid) {
+      await FriesTransaction.create(
+        { user_id: req.user.id, task_id: task.id, amount: 10, reason: 'task_completed' },
+        { transaction },
+      );
+    }
+    if (isOnTime) {
+      await FriesTransaction.create(
+        { user_id: req.user.id, task_id: task.id, amount: 5, reason: 'on_time_bonus' },
+        { transaction },
+      );
+    }
+    if (friesEarned > 0) {
+      await user.update({ fries_balance: user.fries_balance + friesEarned }, { transaction });
+    }
+    return user;
+  });
 
   res.send({
     task: await findTask(task.id, req.user.id),
-    fries_earned: 0,
-    fries_balance: req.user.fries_balance,
+    fries_earned: friesEarned,
+    fries_balance: updatedUser.fries_balance,
   });
 };
 
