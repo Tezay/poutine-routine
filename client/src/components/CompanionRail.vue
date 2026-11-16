@@ -74,7 +74,7 @@ export default {
       );
     },
     canOpenBox() {
-      return (this.user.fries_balance ?? 0) >= this.boxCost;
+      return this.user.fries_balance >= this.boxCost;
     },
   },
   // The companion rail is on every page once logged in, so it loads the poutines.

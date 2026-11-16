@@ -33,17 +33,12 @@ export const usePoutinesStore = defineStore('poutines', {
     async openBox() {
       const response = await PoutineDataService.openBox();
       this.replacePoutine(response.data.poutine);
-      const authStore = useAuthStore();
-      if (authStore.user) {
-        authStore.user.fries_balance = response.data.fries_balance;
-      }
+      useAuthStore().user.fries_balance = response.data.fries_balance;
       return response.data;
     },
     replacePoutine(updatedPoutine) {
       const index = this.poutines.findIndex((poutine) => poutine.id === updatedPoutine.id);
-      if (index !== -1) {
-        this.poutines[index] = updatedPoutine;
-      }
+      this.poutines[index] = updatedPoutine;
     },
   },
 });

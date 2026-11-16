@@ -19,7 +19,7 @@
           :style="{ width: progressPercentage + '%' }"
         ></div>
       </div>
-      <!-- Static for now: no field in the mock data provides this value. -->
+      <!-- Static for now: the server does not send this value. -->
       <div class="text-sm text-fg-muted">Next box in 2 tasks</div>
     </section>
 

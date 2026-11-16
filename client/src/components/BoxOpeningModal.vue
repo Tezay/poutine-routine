@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     canOpenAnother() {
-      return !this.isOpening && (this.authStore.user?.fries_balance ?? 0) >= this.boxCost;
+      return !this.isOpening && this.authStore.user.fries_balance >= this.boxCost;
     },
     rarityClasses() {
       const baseClass = 'font-medium';

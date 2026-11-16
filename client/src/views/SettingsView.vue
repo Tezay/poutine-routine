@@ -16,7 +16,7 @@
             :disabled="dailyGoal <= 1"
             @click="dailyGoal--"
           >
-            -
+            −
           </button>
           <span class="w-10 bg-bg-default text-center leading-8 font-semibold">{{
             dailyGoal
@@ -49,10 +49,10 @@
           v-for="poutine in ownedPoutines"
           :key="poutine.id"
           type="button"
-          :aria-pressed="poutine.id === companionId"
+          :aria-pressed="poutine.id === user.companion_poutine_id"
           class="flex w-28 cursor-pointer flex-col items-center gap-1 rounded-lg border-2 p-1.5 text-center text-xs"
           :class="
-            poutine.id === companionId
+            poutine.id === user.companion_poutine_id
               ? 'border-border-accent font-semibold text-fg-accent'
               : 'border-border-default text-fg-muted'
           "
@@ -143,7 +143,6 @@ export default {
     return {
       goalReward: 20,
       dailyGoal: user.daily_goal,
-      companionId: user.companion_poutine_id,
       email: user.email,
       password: '',
       serverError: '',
@@ -160,7 +159,6 @@ export default {
   },
   methods: {
     async selectCompanion(poutineId) {
-      this.companionId = poutineId;
       this.serverError = '';
       try {
         const response = await UserDataService.updateCompanion(poutineId);
@@ -183,12 +181,7 @@ export default {
 
       try {
         const response = await UserDataService.update(data);
-        let updatedUser = response.data;
-        if (this.companionId && this.companionId !== updatedUser.companion_poutine_id) {
-          const companionResponse = await UserDataService.updateCompanion(this.companionId);
-          updatedUser = companionResponse.data;
-        }
-        this.authStore.setUser(updatedUser);
+        this.authStore.setUser(response.data);
         this.password = '';
         this.isSaved = true;
       } catch (error) {
