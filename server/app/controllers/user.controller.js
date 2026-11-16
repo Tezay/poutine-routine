@@ -98,7 +98,7 @@ exports.updateCompanion = async (req, res) => {
   const owned = await UserPoutine.findOne({
     where: { user_id: req.user.id, poutine_id },
   });
-  if (!owned || owned.quantity < 1) {
+  if (!owned) {
     return res.status(400).send({ message: 'You do not own this poutine.' });
   }
 
