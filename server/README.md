@@ -59,14 +59,14 @@ Then start the client (see [`../client/README.md`](../client/README.md)).
 
 Run from inside `server/`:
 
-| Command                | Effect                                                             |
-| ---------------------- | ------------------------------------------------------------------ |
-| `npm start`            | Start the API with nodemon (restarts when a file changes)          |
-| `npm run seed`         | Add the poutine catalogue and the test accounts                    |
-| `npm run lint`         | Run ESLint                                                         |
-| `npm run lint:fix`     | Run ESLint and fix what it can                                     |
-| `npm run format`       | Run Prettier and rewrite the files                                 |
-| `npm run format:check` | Run Prettier in check mode (what CI runs)                          |
+| Command                | Effect                                                    |
+| ---------------------- | --------------------------------------------------------- |
+| `npm start`            | Start the API with nodemon (restarts when a file changes) |
+| `npm run seed`         | Add the poutine catalogue and the test accounts           |
+| `npm run lint`         | Run ESLint                                                |
+| `npm run lint:fix`     | Run ESLint and fix what it can                            |
+| `npm run format`       | Run Prettier and rewrite the files                        |
+| `npm run format:check` | Run Prettier in check mode (what CI runs)                 |
 
 The CI workflow (`.github/workflows/server-ci.yml`) runs `format:check` and `lint` on every pull
 request.
