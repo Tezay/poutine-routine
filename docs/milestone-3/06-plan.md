@@ -37,8 +37,7 @@ The full scope table of Milestone 1:
 | 8 - 21 Sep      | 0      | Concept, scope, data model, mockups, plan               | Done. Milestone 1         |
 | 22 Sep - 4 Oct  | 1      | Client, design tokens, application shell, first sprites | Done                      |
 | 5 - 18 Oct      | 2      | Full frontend on test data                              | Done. Milestone 2         |
-| 19 Oct - 1 Nov  | 3      | Models, tasks and tags API, login, client on the API    | Late. Started on 7 Nov    |
-| 2 - 15 Nov      | 4      | Fries and boxes, security, tests, documentation         | Done with sprint 3, in the last ten days. Milestone 3 |
+| 2 Nov - 15 Nov  | 3      | Models, tasks and tags API, login, client on the API, Fries and boxes, security, tests, documentation    | Done. Milestone 3    |
 
 Sprint 3 started late. Authentication and the database came late in the course, a risk we listed
 in Milestone 2. To catch up, we wrote the API contract first. Then everyone could build their part
@@ -48,7 +47,7 @@ of the server and the client at the same time.
 
 | Risk                                       | What happened                                                    |
 | :----------------------------------------- | :--------------------------------------------------------------- |
-| Authentication is taught late              | It came late, so sprint 3 started late. The API contract let us work in parallel |
+| Authentication is taught late              | The API contract let us work in parallel |
 | Different local MySQL installations        | Solved with Docker: the same MySQL for everyone, on macOS and Windows |
 | The frontend and the API do not fit        | Solved: the test data already used the database column names     |
 | Too little time for security and the game  | Security and the task list came first. Moods and effects were left out |
