@@ -33,7 +33,7 @@ The full scope table of Milestone 1:
 ## Timeline
 
 | Period          | Sprint | Goal                                                    | State                     |
-| :-------------- | :----- | :------------------------------------------------------ | :------------------------ |
+| :-------------- | :-------- | :--------------------------------------------------- | :------------------------ |
 | 8 - 21 Sep      | 0      | Concept, scope, data model, mockups, plan               | Done. Milestone 1         |
 | 22 Sep - 4 Oct  | 1      | Client, design tokens, application shell, first sprites | Done                      |
 | 5 - 18 Oct      | 2      | Full frontend on test data                              | Done. Milestone 2         |

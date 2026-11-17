@@ -6,7 +6,7 @@ commands and the answers of the server are in
 We ran them on 16 November 2026.
 
 | Measure                                         | How we tested it                                         | Result |
-| :---------------------------------------------- | :------------------------------------------------------- | :----- |
+| :------------------------------------------- | :---------------------------------------------------- | :-------- |
 | Passwords hashed with bcrypt                    | The database only has `$2b$10$...` hashes                 | Pass   |
 | JWT in an `httpOnly`, `SameSite` cookie         | `Set-Cookie: jwt=...; HttpOnly; SameSite=Strict`, no token in the body | Pass |
 | Secrets in environment variables                | Both `.env` files are ignored by Git                      | Pass   |
