@@ -26,7 +26,7 @@ cd docs/milestone-2
 pandoc *.md -o "Poutine-Routine-Milestone-2.pdf" --pdf-engine=typst -H style.typ
 ```
 
-The same command builds Milestone 1 from `docs/milestone-1`, with `Poutine-Routine-Milestone-1.pdf`.
+The same command builds Milestones 1 and 3 from their folders, with the matching PDF name.
 Sections are picked up in alphabetical order, which is why the files are numbered `00-` to `08-`.
 The cover page and the table of contents are written as Typst blocks at the top of `00-cover.md`;
 `style.typ` holds the page setup, the text size and the table style.
@@ -40,6 +40,7 @@ they resolve both in the PDF and in the GitHub preview.
 docs/
 ├── milestone-1/       one Markdown file per section, plus the built PDF
 ├── milestone-2/       same layout, for Milestone 2
+├── milestone-3/       same layout, for Milestone 3
 ├── database/          schema.dbml - the written source of the ERD
 └── assets/            diagrams (SVG), exported mockups (PNG), screenshots of the application
 ```
