@@ -14,6 +14,9 @@ Each milestone has a report, written in Markdown and built as a PDF:
   [`docs/milestone-1/`](docs/milestone-1) ([PDF](docs/milestone-1/Poutine-Routine-Milestone-1.pdf))
 - **Milestone 2** - front-end progress, screenshots, architecture and updated plan:
   [`docs/milestone-2/`](docs/milestone-2) ([PDF](docs/milestone-2/Poutine-Routine-Milestone-2.pdf))
+- **Milestone 3** - back end, MySQL, login and session security, security tests, final plan and
+  contributions: [`docs/milestone-3/`](docs/milestone-3)
+  ([PDF](docs/milestone-3/Poutine-Routine-Milestone-3.pdf))
 
 ## Stack
 
