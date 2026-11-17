@@ -30,7 +30,7 @@
             +
           </button>
         </div>
-        <span class="text-fg-muted">tasks per day · reaching it earns {{ goalReward }} 🍟</span>
+        <span class="text-fg-muted">tasks per day</span>
       </div>
       <hr class="my-4 border-border-default" />
       <div class="flex items-center gap-3">
@@ -111,7 +111,6 @@ export default {
   data() {
     const user = this.authStore.user;
     return {
-      goalReward: 20,
       dailyGoal: user.daily_goal,
       email: user.email,
       password: '',

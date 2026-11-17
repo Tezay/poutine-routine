@@ -19,8 +19,12 @@
           :style="{ width: progressPercentage + '%' }"
         ></div>
       </div>
-      <!-- Static for now: the server does not send this value. -->
-      <div class="text-sm text-fg-muted">Next box in 2 tasks</div>
+      <div class="text-sm text-fg-muted">
+        <template v-if="tasksToNextBox > 0">
+          Next box in {{ tasksToNextBox }} {{ tasksToNextBox === 1 ? 'task' : 'tasks' }}
+        </template>
+        <template v-else>A box is ready</template>
+      </div>
     </section>
 
     <section class="grid grid-cols-4 gap-4" aria-label="Poutine catalogue">
@@ -74,6 +78,7 @@
 import AppTopbar from '../components/AppTopbar.vue';
 import PoutineModal from '../components/PoutineModal.vue';
 import PoutineSprite from '../components/PoutineSprite.vue';
+import { useAuthStore } from '../stores/auth.js';
 import { usePoutinesStore } from '../stores/poutines.js';
 
 export default {
@@ -83,8 +88,10 @@ export default {
     PoutineSprite,
   },
   setup() {
+    const authStore = useAuthStore();
     const poutinesStore = usePoutinesStore();
     return {
+      authStore,
       poutinesStore,
     };
   },
@@ -102,6 +109,9 @@ export default {
     },
     collectedCount() {
       return this.poutines.filter((poutine) => this.isOwned(poutine)).length;
+    },
+    tasksToNextBox() {
+      return Math.ceil((50 - this.authStore.user.fries_balance) / 10);
     },
     progressPercentage() {
       if (this.totalCount === 0) return 0;
